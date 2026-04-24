@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supradyn — The Cost of Going Dark | 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --acc:#f97316;--acc-dim:rgba(249,115,22,0.1);--acc-b:rgba(249,115,22,0.18);
+    --red:#ef4444;--red-dim:rgba(239,68,68,0.1);--red-b:rgba(239,68,68,0.22);
+    --bg:#08060a;--card:#110802;--card-r:#130202;
+    --text:#f0ede5;--muted:#8a7d65;--white:#fff;
+    --green:#4ade80;--amber:#fbbf24;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.5;}
+
+  .cover{
+    min-height:100vh;
+    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(239,68,68,0.16) 0%,transparent 70%),
+               linear-gradient(180deg,#130200 0%,#08060a 100%);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px 40px;text-align:center;position:relative;overflow:hidden;
+  }
+  .cover::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f97316' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+  .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:28px;font-weight:600;}
+  .eyebrow span{color:var(--acc);}
+  .cover h1{font-size:clamp(34px,5vw,60px);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:14px;max-width:820px;}
+  .cover h1 .warn{color:var(--red);}
+  .cover-sub{font-size:17px;color:var(--muted);margin-bottom:50px;max-width:600px;}
+  .cover-note{margin-top:24px;font-size:12px;color:var(--muted);background:rgba(255,255,255,0.03);padding:7px 18px;border-radius:20px;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;width:100%;max-width:900px;background:var(--red-b);border-radius:16px;overflow:hidden;border:1px solid var(--red-b);}
+  .kpi{background:var(--card-r);padding:26px 20px;text-align:center;}
+  .kv{font-size:34px;font-weight:900;color:var(--red);line-height:1;margin-bottom:6px;}
+  .kv.ok{color:var(--green);}
+  .kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+  .section{padding:64px 40px;max-width:1200px;margin:0 auto;}
+  .sec-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);border:1px solid var(--red-b);padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+  .sec-title{font-size:clamp(22px,2.8vw,36px);font-weight:800;color:var(--white);margin-bottom:8px;}
+  .sec-desc{font-size:14px;color:var(--muted);max-width:660px;margin-bottom:32px;}
+  .divider{height:1px;background:var(--acc-b);margin:0 40px;}
+
+  .alert-box{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;gap:14px;align-items:flex-start;}
+  .alert-body{font-size:13px;color:var(--text);line-height:1.6;}
+  .alert-body strong{color:var(--red);}
+
+  .two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start;}
+
+  .chart-card{background:var(--card-r);border:1px solid var(--red-b);border-radius:16px;padding:22px;}
+  .cc-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+  .cc-title{font-size:16px;font-weight:800;color:var(--white);margin-bottom:14px;}
+  .chart-wrap{position:relative;height:200px;}
+
+  table{width:100%;border-collapse:collapse;margin-top:16px;}
+  th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--acc-b);}
+  td{padding:9px 12px;font-size:13px;border-bottom:1px solid rgba(249,115,22,0.06);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;}
+  .b-ok{background:rgba(34,197,94,0.15);color:#4ade80;}
+  .b-dead{background:rgba(239,68,68,0.15);color:#f87171;}
+  .b-waste{background:rgba(251,191,36,0.12);color:#fbbf24;}
+  .zero-row td{background:rgba(239,68,68,0.05);}
+
+  .ins-stack{display:flex;flex-direction:column;gap:14px;}
+  .ins{background:var(--card-r);border:1px solid var(--red-b);border-radius:14px;padding:20px 22px;}
+  .ins-t{font-size:14px;font-weight:700;color:var(--white);margin-bottom:7px;}
+  .ins-b{font-size:13px;color:var(--muted);line-height:1.6;}
+  .ins-b strong{color:var(--text);}
+
+  .footer{text-align:center;padding:32px 40px;font-size:12px;color:var(--muted);border-top:1px solid var(--acc-b);}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="eyebrow"><span>Supradyn (Bayer)</span> · Health Platform India · Agency 434</div>
+  <h1><span class="warn">Cost of</span><br>Going Dark.</h1>
+  <p class="cover-sub">SPA paused in March. Display burned ₹6.54L at 0.13× ROAS. All advertising stopped in April — ₹11.74L in combined GMV loss and waste, with search visibility wiped to zero for 2 months.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="kv">₹6.06L</div><div class="kl">Estimated GMV Lost</div></div>
+    <div class="kpi"><div class="kv">₹5.68L</div><div class="kl">Display Net Waste</div></div>
+    <div class="kpi"><div class="kv">0</div><div class="kl">Search Impressions (Mar–Apr)</div></div>
+    <div class="kpi"><div class="kv ok">2.03×</div><div class="kl">Last Healthy ROAS (Q4 '25)</div></div>
+  </div>
+  <div class="cover-note">* GMV loss estimated at Jan–Feb SPA average ₹3.03L/month × 2 months · INR</div>
+</div>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="sec-tag">Advertising Collapse Audit</div>
+  <h2 class="sec-title">₹6.54L Spent on Display. ₹86K Returned. Search Went Dark.</h2>
+  <p class="sec-desc">The "Supradyn Daily Multi Inv" SDA campaign consumed the entire March budget at 0.13× ROAS while both SPA campaigns — delivering 1.6× consistently — were paused. April saw complete advertising shutdown.</p>
+
+  <div class="alert-box">
+    <div style="font-size:20px;line-height:1">⚠️</div>
+    <div class="alert-body">
+      SPA campaigns had been generating <strong>₹3L+ GMV/month at 1.6× ROAS</strong> with zero saturation signals. The decision to pause SPA and scale a 0.13× display campaign in the same month cost an estimated <strong>₹11.74L in combined GMV loss and display waste</strong> across February–April.
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="chart-card">
+        <div class="cc-label">Monthly Performance — SPA GMV vs SDA Spend</div>
+        <div class="cc-title">SPA GMV dropped to ₹0. Display spend peaked at ₹5.05L for ₹65K back.</div>
+        <div class="chart-wrap"><canvas id="c1"></canvas></div>
+      </div>
+      <table>
+        <thead><tr><th>Campaign</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--white);font-weight:600;font-size:12px">KW Generic (SPA)</td>
+            <td><span class="badge b-ok">1.72×</span></td>
+            <td><span class="badge b-ok">1.63×</span></td>
+            <td><span class="badge b-dead">Paused</span></td>
+            <td><span class="badge b-dead">Dark</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--white);font-weight:600;font-size:12px">Supradyn Auto (SPA)</td>
+            <td><span class="badge b-ok">1.02×</span></td>
+            <td><span class="badge b-ok">0.95×</span></td>
+            <td><span class="badge b-dead">Paused</span></td>
+            <td><span class="badge b-dead">Dark</span></td>
+          </tr>
+          <tr>
+            <td style="color:var(--white);font-weight:600;font-size:12px">Ginseng (SPA)</td>
+            <td><span class="badge b-ok">3.1×</span></td>
+            <td><span class="badge b-ok">1.3×</span></td>
+            <td><span class="badge b-dead">Stopped</span></td>
+            <td><span class="badge b-dead">Dark</span></td>
+          </tr>
+          <tr class="zero-row">
+            <td style="color:var(--red);font-weight:600;font-size:12px">Supradyn Daily SDA ⚠</td>
+            <td style="color:var(--muted)">—</td>
+            <td><span class="badge b-waste">0.14×</span></td>
+            <td><span class="badge b-waste">0.13×</span></td>
+            <td><span class="badge b-dead">Stopped</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins-stack">
+      <div class="ins">
+        <div class="ins-t">🔍 Search ≠ Display in Health & Pharma</div>
+        <div class="ins-b">Vitamins are bought on intent — shoppers search "Supradyn" or "multivitamin" specifically. Display reaches passive browsers. <strong>13.28L impressions in March produced just 2,601 clicks (0.2% CTR)</strong> — confirming display cannot substitute for search in this category.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">⚡ The Fix is Operational, Not Strategic</div>
+        <div class="ins-b">KW Generic SPA delivered <strong>1.67× ROAS for 6+ consecutive months</strong>. It is paused, not deleted. Reactivating at ₹1.5–2L/month restores ₹3L+ GMV and 5L+ search impressions within the same billing cycle.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">🏁 Every Week Dark = Steeper Re-entry Cost</div>
+        <div class="ins-b">Competitors have now accumulated <strong>2+ months of performance history</strong> on the same keywords with stronger Quality Scores and better placements. The longer the gap, the higher the re-entry bid required to reclaim position.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">Supradyn (Bayer) | Health Platform India (Agency 434) | Osmos Advertising Platform | Oct 2025 – Apr 20, 2026 | GMV loss estimated at Jan–Feb SPA avg ₹3.03L/month</div>
+
+<script>
+const G='rgba(255,255,255,0.06)',O='#f97316',R='#ef4444';
+const tip={backgroundColor:'#130202',borderColor:'rgba(239,68,68,0.3)',borderWidth:1,titleColor:'#fff',bodyColor:'#8a7d65',padding:10};
+new Chart(document.getElementById('c1'),{
+  type:'bar',
+  data:{labels:["Q4'25 avg",'Jan','Feb','Mar','Apr'],
+    datasets:[
+      {type:'bar',label:'SPA GMV (₹L)',data:[2.39,2.99,3.07,0,0],
+        backgroundColor:ctx=>ctx.raw===0?'rgba(239,68,68,0.15)':'rgba(249,115,22,0.7)',
+        borderColor:ctx=>ctx.raw===0?R:O,borderWidth:1,borderRadius:5,yAxisID:'y'},
+      {type:'bar',label:'SDA Spend (₹L)',data:[0,0,1.50,5.05,0],
+        backgroundColor:'rgba(239,68,68,0.4)',borderColor:R,borderWidth:1,borderRadius:5,yAxisID:'y'},
+      {type:'line',label:'SPA ROAS',data:[2.03,1.62,1.51,null,null],
+        borderColor:'#fbbf24',backgroundColor:'transparent',tension:0.3,
+        pointBackgroundColor:['#4ade80','#f97316','#fbbf24',R,R],pointRadius:6,yAxisID:'y2',spanGaps:false}
+    ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:'#8a7d65',boxWidth:10,font:{size:11},padding:14}},tooltip:{...tip}},
+    scales:{
+      y:{grid:{color:G},ticks:{color:'#8a7d65',font:{size:11},callback:v=>'₹'+v+'L'},position:'left'},
+      y2:{grid:{display:false},ticks:{color:'#fbbf24',font:{size:11},callback:v=>v+'×'},position:'right',min:0,max:3},
+      x:{grid:{color:G},ticks:{color:'#8a7d65',font:{size:11}}}
+    }
+  }
+});
+</script>
+</body>
+</html>

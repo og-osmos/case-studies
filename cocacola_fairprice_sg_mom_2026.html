@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coca-Cola FairPrice SG — Advertising Impact | Jan–Apr 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --acc:#ef4444;--acc-dim:rgba(239,68,68,0.1);--acc-b:rgba(239,68,68,0.2);
+    --bg:#08000a;--card:#130005;
+    --text:#f5e5e5;--muted:#8a6565;--white:#fff;
+    --green:#4ade80;--amber:#fbbf24;--purple:#a78bfa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.5;}
+
+  .cover{
+    min-height:100vh;
+    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(239,68,68,0.18) 0%,transparent 70%),
+               linear-gradient(180deg,#130003 0%,#08000a 100%);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px 40px;text-align:center;position:relative;overflow:hidden;
+  }
+  .cover::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ef4444' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+  .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:28px;font-weight:600;}
+  .eyebrow span{color:var(--acc);}
+  .cover h1{font-size:clamp(34px,5vw,60px);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:14px;max-width:820px;}
+  .cover h1 em{color:var(--acc);font-style:normal;}
+  .cover-sub{font-size:17px;color:var(--muted);margin-bottom:50px;max-width:600px;}
+  .cover-note{margin-top:24px;font-size:12px;color:var(--muted);background:rgba(255,255,255,0.03);padding:7px 18px;border-radius:20px;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;width:100%;max-width:900px;background:var(--acc-b);border-radius:16px;overflow:hidden;border:1px solid var(--acc-b);}
+  .kpi{background:var(--card);padding:26px 20px;text-align:center;}
+  .kv{font-size:34px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:6px;}
+  .kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+  .section{padding:64px 40px;max-width:1200px;margin:0 auto;}
+  .sec-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-b);padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+  .sec-title{font-size:clamp(22px,2.8vw,36px);font-weight:800;color:var(--white);margin-bottom:8px;}
+  .sec-desc{font-size:14px;color:var(--muted);max-width:660px;margin-bottom:32px;}
+  .divider{height:1px;background:var(--acc-b);margin:0 40px;}
+
+  .two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start;}
+
+  .chart-card{background:var(--card);border:1px solid var(--acc-b);border-radius:16px;padding:22px;}
+  .cc-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+  .cc-title{font-size:16px;font-weight:800;color:var(--white);margin-bottom:14px;}
+  .chart-wrap{position:relative;height:220px;}
+
+  table{width:100%;border-collapse:collapse;margin-top:16px;}
+  th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--acc-b);}
+  td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(239,68,68,0.06);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .av{color:var(--acc);font-weight:700;}
+  .gv{color:var(--green);font-weight:700;}
+  .nw{color:var(--purple);background:rgba(167,139,250,0.1);padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;}
+  .hl-row td{background:rgba(239,68,68,0.06);}
+
+  .ins-stack{display:flex;flex-direction:column;gap:14px;}
+  .ins{background:var(--card);border:1px solid var(--acc-b);border-radius:14px;padding:20px 22px;}
+  .ins-t{font-size:14px;font-weight:700;color:var(--white);margin-bottom:7px;}
+  .ins-b{font-size:13px;color:var(--muted);line-height:1.6;}
+  .ins-b strong{color:var(--text);}
+
+  .footer{text-align:center;padding:32px 40px;font-size:12px;color:var(--muted);border-top:1px solid var(--acc-b);}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="eyebrow"><span>Coca-Cola</span> · FairPrice Online Singapore · Agency 454</div>
+  <h1><em>SGD 1.07M</em> Generated<br>from <em>SGD 8.9K</em> in Ad Spend.</h1>
+  <p class="cover-sub">120× average return on every dollar spent. GMV and orders grew every single month — with April activating the first SDA campaign for full-funnel reach.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="kv">SGD 1.07M</div><div class="kl">Total Attributed GMV</div></div>
+    <div class="kpi"><div class="kv">120×</div><div class="kl">Average ROAS</div></div>
+    <div class="kpi"><div class="kv">65,590</div><div class="kl">Total Orders</div></div>
+    <div class="kpi"><div class="kv">3.5×</div><div class="kl">Impression Growth</div></div>
+  </div>
+  <div class="cover-note">* ROAS reflects FMCG basket attribution on FairPrice Online · SGD · April SPA projected at 1.5× 20-day actuals</div>
+</div>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="sec-tag">Portfolio Performance</div>
+  <h2 class="sec-title">Revenue and Orders Growing Every Month</h2>
+  <p class="sec-desc">Spend scaled 2.1× from January to April while ROAS held above 100×. ROAS softening in April reflects intentional portfolio mix shift — adding NB/competitor campaigns with lower ROAS but higher incremental value.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="chart-card">
+        <div class="cc-label">Monthly GMV & ROAS (SPA)</div>
+        <div class="cc-title">GMV grew every month — zero plateauing</div>
+        <div class="chart-wrap"><canvas id="c1"></canvas></div>
+      </div>
+      <table>
+        <thead><tr><th>Campaign</th><th>Jan GMV (SGD)</th><th>Apr GMV (SGD)</th><th>ROAS</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--white);font-weight:600">Competitor Water</td><td>33,071</td><td class="gv">59,251</td><td class="av">137×</td></tr>
+          <tr><td style="color:var(--white);font-weight:600">NB CSD</td><td style="color:var(--muted)">—</td><td class="gv">46,984</td><td><span class="nw">NEW · 93×</span></td></tr>
+          <tr><td style="color:var(--white);font-weight:600">Fuze Tea</td><td>23,685</td><td class="gv">44,990</td><td class="av">119×</td></tr>
+          <tr><td style="color:var(--white);font-weight:600">Smartwater</td><td>36,701</td><td>14,071</td><td class="av">138×</td></tr>
+          <tr><td style="color:var(--white);font-weight:600">Coke</td><td>17,336</td><td>13,442</td><td class="av">109×</td></tr>
+          <tr><td style="color:var(--white);font-weight:600">ATH</td><td>16,201</td><td>6,563</td><td style="color:var(--amber);font-weight:700">55×</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins-stack">
+      <div class="ins">
+        <div class="ins-t">🌊 Competitor Water: The Hidden Crown Jewel</div>
+        <div class="ins-b">Launched January, Competitor Water is now the <strong>#1 GMV driver</strong> — SGD 59K in just 20 April days at 137× ROAS. Targeting rival water brands intercepts high-intent shoppers mid-decision.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">🥤 NB CSD Captured Undefended Demand</div>
+        <div class="ins-b">Added in February, NB CSD now drives <strong>SGD 47K GMV in 20 days</strong> from generic "cola / fizzy drink" searches. These were previously unconverted impressions gifted to competitors.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">📺 April: Full-Funnel Strategy Begins</div>
+        <div class="ins-b">First SDA activation April 19 — <strong>136K impressions across homepage, checkout and promo pages</strong> in 3 days. Search defence is mature; brand awareness at scale is the natural next phase.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">Coca-Cola | FairPrice Online Singapore (Agency 454) | Osmos Advertising Platform | Jan 1 – Apr 20, 2026 | April campaign table shows 20-day actuals</div>
+
+<script>
+const G='rgba(255,255,255,0.06)',A='#ef4444';
+const tip={backgroundColor:'#130005',borderColor:'rgba(239,68,68,0.3)',borderWidth:1,titleColor:'#fff',bodyColor:'#8a6565',padding:10};
+new Chart(document.getElementById('c1'),{
+  type:'bar',
+  data:{labels:['Jan','Feb','Mar','Apr (proj.)'],
+    datasets:[
+      {type:'bar',label:'GMV (SGD)',data:[185209,247827,306091,330790],backgroundColor:['rgba(239,68,68,0.4)','rgba(239,68,68,0.55)','rgba(239,68,68,0.7)','rgba(239,68,68,0.9)'],borderColor:A,borderWidth:1,borderRadius:5,yAxisID:'y'},
+      {type:'line',label:'ROAS',data:[128.8,129.8,123.1,107.5],borderColor:'#fbbf24',backgroundColor:'transparent',tension:0.4,pointBackgroundColor:'#fbbf24',pointRadius:5,yAxisID:'y2'}
+    ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:'#8a6565',boxWidth:10,font:{size:11},padding:14}},tooltip:{...tip}},
+    scales:{
+      y:{grid:{color:G},ticks:{color:'#8a6565',font:{size:11},callback:v=>'S$'+Math.round(v/1000)+'K'},position:'left'},
+      y2:{grid:{display:false},ticks:{color:'#fbbf24',font:{size:11},callback:v=>v+'×'},position:'right',min:80},
+      x:{grid:{color:G},ticks:{color:'#8a6565',font:{size:11}}}
+    }
+  }
+});
+</script>
+</body>
+</html>

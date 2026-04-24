@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lakme — Advertising Impact | Jan–Apr 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --acc:#e91e8c;--acc-dim:rgba(233,30,140,0.12);--acc-b:rgba(233,30,140,0.2);
+    --bg:#07000f;--bg2:#0e0018;--card:#120018;
+    --text:#f0e5f5;--muted:#8a7095;--white:#fff;
+    --green:#4ade80;--amber:#fbbf24;--red:#f87171;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.5;}
+
+  /* COVER */
+  .cover{
+    min-height:100vh;
+    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(233,30,140,0.18) 0%,transparent 70%),
+               linear-gradient(180deg,#120009 0%,#07000f 100%);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px 40px;text-align:center;position:relative;overflow:hidden;
+  }
+  .cover::before{
+    content:'';position:absolute;inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e91e8c' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:28px;font-weight:600;}
+  .eyebrow span{color:var(--acc);}
+  .cover h1{font-size:clamp(34px,5vw,60px);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:14px;max-width:820px;}
+  .cover h1 em{color:var(--acc);font-style:normal;}
+  .cover-sub{font-size:17px;color:var(--muted);margin-bottom:50px;max-width:560px;}
+  .cover-note{margin-top:24px;font-size:12px;color:var(--muted);background:rgba(255,255,255,0.03);padding:7px 18px;border-radius:20px;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;width:100%;max-width:900px;background:var(--acc-b);border-radius:16px;overflow:hidden;border:1px solid var(--acc-b);}
+  .kpi{background:var(--card);padding:26px 20px;text-align:center;}
+  .kv{font-size:34px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:6px;}
+  .kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+  /* SECTION */
+  .section{padding:64px 40px;max-width:1200px;margin:0 auto;}
+  .sec-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-b);padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+  .sec-title{font-size:clamp(22px,2.8vw,36px);font-weight:800;color:var(--white);margin-bottom:8px;}
+  .sec-desc{font-size:14px;color:var(--muted);max-width:620px;margin-bottom:32px;}
+  .divider{height:1px;background:var(--acc-b);margin:0 40px;}
+
+  .two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start;}
+
+  .chart-card{background:var(--card);border:1px solid var(--acc-b);border-radius:16px;padding:22px;}
+  .cc-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+  .cc-title{font-size:16px;font-weight:800;color:var(--white);margin-bottom:14px;}
+  .chart-wrap{position:relative;height:220px;}
+
+  table{width:100%;border-collapse:collapse;margin-top:16px;}
+  th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--acc-b);}
+  td{padding:11px 12px;font-size:13px;border-bottom:1px solid rgba(233,30,140,0.06);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .av{color:var(--acc);font-weight:700;}
+  .gv{color:var(--green);font-weight:700;}
+  .hl-row td{background:rgba(233,30,140,0.06);}
+
+  .ins-stack{display:flex;flex-direction:column;gap:14px;}
+  .ins{background:var(--card);border:1px solid var(--acc-b);border-radius:14px;padding:20px 22px;}
+  .ins-t{font-size:14px;font-weight:700;color:var(--white);margin-bottom:7px;}
+  .ins-b{font-size:13px;color:var(--muted);line-height:1.6;}
+  .ins-b strong{color:var(--text);}
+
+  .footer{text-align:center;padding:32px 40px;font-size:12px;color:var(--muted);border-top:1px solid var(--acc-b);}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="eyebrow"><span>Lakme</span> · Purplle · Agency 122</div>
+  <h1>ROAS Grew <em>153%.</em><br>GMV Grew <em>3.5×.</em></h1>
+  <p class="cover-sub">₹6.15Cr invested in search advertising returned ₹28.43Cr in GMV — and efficiency improved every single month.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="kv">₹28.43Cr</div><div class="kl">Total Attributed GMV</div></div>
+    <div class="kpi"><div class="kv">4.62×</div><div class="kl">Average ROAS</div></div>
+    <div class="kpi"><div class="kv">6.96×</div><div class="kl">April ROAS (Peak)</div></div>
+    <div class="kpi"><div class="kv">+153%</div><div class="kl">ROAS Growth Jan→Apr</div></div>
+  </div>
+  <div class="cover-note">* April figures extrapolated from 20-day actuals ×1.5 · All values SPA only · INR</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- MAIN SECTION -->
+<section class="section">
+  <div class="sec-tag">Performance Overview</div>
+  <h2 class="sec-title">Consistent Growth, Every Month</h2>
+  <p class="sec-desc">Spend scaled 40% from January to April while GMV grew 253% — demonstrating compounding returns as campaigns matured.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="chart-card">
+        <div class="cc-label">Monthly GMV vs Spend</div>
+        <div class="cc-title">GMV compounded even as spend stayed nearly flat</div>
+        <div class="chart-wrap"><canvas id="c1"></canvas></div>
+      </div>
+      <table>
+        <thead><tr><th>Month</th><th>Spend (₹Cr)</th><th>GMV (₹Cr)</th><th>ROAS</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600;color:var(--white)">January</td><td>1.19</td><td>3.27</td><td class="av">2.75×</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)">February</td><td>1.79</td><td>6.87</td><td class="av">3.84×</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)">March</td><td>1.51</td><td>6.74</td><td class="av">4.46×</td></tr>
+          <tr class="hl-row"><td style="font-weight:700;color:var(--white)">April <span style="font-size:10px;color:var(--muted)">proj.</span></td><td>1.66</td><td class="gv">11.55</td><td class="av" style="font-size:16px">6.96×</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins-stack">
+      <div class="ins">
+        <div class="ins-t">☀️ Sunscreen Season Catalysed the Surge</div>
+        <div class="ins-b">ROAS jumped from 3.84× to <strong>6.96× in April</strong> as summer skincare demand peaked. Advertising captured high-intent seasonal shoppers that competitors couldn't intercept without platform presence.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">📈 40% More Spend, 253% More GMV</div>
+        <div class="ins-b">Spend grew modestly from ₹1.19Cr to ₹1.66Cr while GMV grew from ₹3.27Cr to ₹11.55Cr. <strong>Portfolio maturity</strong> meant campaigns earned better placements and converted at higher rates month over month.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">🚀 New April Launches Lifted the Portfolio</div>
+        <div class="ins-b">5 new SKU campaigns activated in April across suncare and colour cosmetics. <strong>Each new launch raised overall portfolio ROAS</strong> — a compounding effect that continues into Q2 2026.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">Lakme | Purplle (Agency 122) | Osmos Advertising Platform | Jan 1 – Apr 20, 2026 | April projected at 1.5× 20-day actuals</div>
+
+<script>
+const G='rgba(255,255,255,0.06)',A='#e91e8c';
+const tip={backgroundColor:'#120018',borderColor:'rgba(233,30,140,0.3)',borderWidth:1,titleColor:'#fff',bodyColor:'#8a7095',padding:10};
+new Chart(document.getElementById('c1'),{
+  type:'bar',
+  data:{labels:['Jan','Feb','Mar','Apr (proj.)'],
+    datasets:[
+      {type:'bar',label:'Spend (₹Cr)',data:[1.19,1.79,1.51,1.66],backgroundColor:'rgba(233,30,140,0.2)',borderColor:A,borderWidth:1,borderRadius:5,yAxisID:'y'},
+      {type:'bar',label:'GMV (₹Cr)',data:[3.27,6.87,6.74,11.55],backgroundColor:['rgba(233,30,140,0.4)','rgba(233,30,140,0.55)','rgba(233,30,140,0.7)','rgba(233,30,140,0.9)'],borderColor:A,borderWidth:1,borderRadius:5,yAxisID:'y'},
+      {type:'line',label:'ROAS',data:[2.75,3.84,4.46,6.96],borderColor:'#fbbf24',backgroundColor:'transparent',tension:0.4,pointBackgroundColor:'#fbbf24',pointRadius:5,yAxisID:'y2'}
+    ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:'#8a7095',boxWidth:10,font:{size:11},padding:14}},tooltip:{...tip}},
+    scales:{
+      y:{grid:{color:G},ticks:{color:'#8a7095',font:{size:11},callback:v=>'₹'+v+'Cr'},position:'left'},
+      y2:{grid:{display:false},ticks:{color:'#fbbf24',font:{size:11},callback:v=>v+'×'},position:'right'},
+      x:{grid:{color:G},ticks:{color:'#8a7095',font:{size:11}}}
+    }
+  }
+});
+</script>
+</body>
+</html>

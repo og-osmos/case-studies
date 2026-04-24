@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garnier India — Advertising Impact | Jan–Apr 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --acc:#22c55e;--acc-dim:rgba(34,197,94,0.1);--acc-b:rgba(34,197,94,0.2);
+    --bg:#00080a;--card:#001109;
+    --text:#e5f5ec;--muted:#6b8f75;--white:#fff;
+    --green:#4ade80;--amber:#fbbf24;--red:#f87171;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.5;}
+
+  .cover{
+    min-height:100vh;
+    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(34,197,94,0.16) 0%,transparent 70%),
+               linear-gradient(180deg,#001a0a 0%,#00080a 100%);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px 40px;text-align:center;position:relative;overflow:hidden;
+  }
+  .cover::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2322c55e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+  .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:28px;font-weight:600;}
+  .eyebrow span{color:var(--acc);}
+  .cover h1{font-size:clamp(34px,5vw,60px);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:14px;max-width:820px;}
+  .cover h1 em{color:var(--acc);font-style:normal;}
+  .cover-sub{font-size:17px;color:var(--muted);margin-bottom:50px;max-width:560px;}
+  .cover-note{margin-top:24px;font-size:12px;color:var(--muted);background:rgba(255,255,255,0.03);padding:7px 18px;border-radius:20px;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;width:100%;max-width:900px;background:var(--acc-b);border-radius:16px;overflow:hidden;border:1px solid var(--acc-b);}
+  .kpi{background:var(--card);padding:26px 20px;text-align:center;}
+  .kv{font-size:34px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:6px;}
+  .kv.warn{color:var(--amber);}
+  .kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+  .section{padding:64px 40px;max-width:1200px;margin:0 auto;}
+  .sec-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-b);padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+  .sec-title{font-size:clamp(22px,2.8vw,36px);font-weight:800;color:var(--white);margin-bottom:8px;}
+  .sec-desc{font-size:14px;color:var(--muted);max-width:620px;margin-bottom:32px;}
+  .divider{height:1px;background:var(--acc-b);margin:0 40px;}
+
+  .two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start;}
+
+  .chart-card{background:var(--card);border:1px solid var(--acc-b);border-radius:16px;padding:22px;}
+  .cc-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+  .cc-title{font-size:16px;font-weight:800;color:var(--white);margin-bottom:14px;}
+  .chart-wrap{position:relative;height:220px;}
+
+  table{width:100%;border-collapse:collapse;margin-top:16px;}
+  th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--acc-b);}
+  td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(34,197,94,0.06);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .av{color:var(--acc);font-weight:700;}
+  .gv{color:var(--green);font-weight:700;}
+  .rv{color:var(--red);font-weight:700;}
+  .hl-row td{background:rgba(34,197,94,0.06);}
+  .flag-row td{background:rgba(239,68,68,0.05);}
+
+  .ins-stack{display:flex;flex-direction:column;gap:14px;}
+  .ins{background:var(--card);border:1px solid var(--acc-b);border-radius:14px;padding:20px 22px;}
+  .ins-t{font-size:14px;font-weight:700;color:var(--white);margin-bottom:7px;}
+  .ins-b{font-size:13px;color:var(--muted);line-height:1.6;}
+  .ins-b strong{color:var(--text);}
+
+  .footer{text-align:center;padding:32px 40px;font-size:12px;color:var(--muted);border-top:1px solid var(--acc-b);}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="eyebrow"><span>Garnier India</span> · Purplle · Agency 122</div>
+  <h1>GMV Grew <em>4.2×.</em><br>Spend Grew Just <em>2×.</em></h1>
+  <p class="cover-sub">Search advertising compounded returns every month — with March FnB launches driving a step-change in April performance.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="kv">₹6.69Cr</div><div class="kl">Total Attributed GMV</div></div>
+    <div class="kpi"><div class="kv">7.96×</div><div class="kl">April ROAS (Peak)</div></div>
+    <div class="kpi"><div class="kv">4.2×</div><div class="kl">GMV Growth Jan→Apr</div></div>
+    <div class="kpi"><div class="kv warn">0.03×</div><div class="kl">Feb SDA ROAS ⚠ Flagged</div></div>
+  </div>
+  <div class="cover-note">* April figures extrapolated from 20-day actuals ×1.5 · SPA performance only · INR</div>
+</div>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="sec-tag">Performance Overview</div>
+  <h2 class="sec-title">Advertising Efficiency Compounded Each Month</h2>
+  <p class="sec-desc">ROAS dipped in March as FnB campaigns launched cold — then surged to 7.96× in April as all three new lines scaled simultaneously. Feb SDA misconfiguration flagged as a ₹3.09L waste.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="chart-card">
+        <div class="cc-label">Monthly GMV vs Spend (SPA)</div>
+        <div class="cc-title">April GMV nearly 4× January — on a flat spend base</div>
+        <div class="chart-wrap"><canvas id="c1"></canvas></div>
+      </div>
+      <table>
+        <thead><tr><th>Month</th><th>Spend (₹Cr)</th><th>GMV (₹Cr)</th><th>ROAS</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600;color:var(--white)">January</td><td>0.204</td><td>0.746</td><td class="av">3.65×</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)">February (SPA)</td><td>0.262</td><td>1.686</td><td class="av">6.43×</td></tr>
+          <tr class="flag-row"><td style="color:var(--red);font-size:12px">Feb SDA ⚠ Misconfigured</td><td class="rv">0.309</td><td class="rv">0.009</td><td class="rv">0.03×</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)">March</td><td>0.253</td><td>1.110</td><td class="av">4.38×</td></tr>
+          <tr class="hl-row"><td style="font-weight:700;color:var(--white)">April <span style="font-size:10px;color:var(--muted)">proj.</span></td><td>0.396</td><td class="gv">3.150</td><td class="av" style="font-size:16px">7.96×</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins-stack">
+      <div class="ins">
+        <div class="ins-t">🌿 FnB Launches: From 1× to 20×+ in One Month</div>
+        <div class="ins-b">Vitamin C, Niacinamide and Salicylic campaigns launched in March at low ROAS. By April all three were at <strong>15–29× ROAS</strong> — new SKUs compound fast when underlying category demand is high.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">⚠️ Feb SDA: ₹3.09L Spent, ₹8,771 Returned</div>
+        <div class="ins-b">The Feb display campaign delivered <strong>0.03× ROAS</strong> — a misconfiguration. ₹3.09L wasted that, redeployed into SPA, would have generated <strong>~₹18L in additional GMV</strong> at the prevailing 6× ROAS.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">🔄 Auto Campaigns Compounding Steadily</div>
+        <div class="ins-b">Facewash Auto grew from <strong>11× in January to 26× by April</strong>. Auto campaigns learn continuously — the longer they run, the better the placement efficiency and conversion rates.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">Garnier India | Purplle (Agency 122) | Osmos Advertising Platform | Jan 1 – Apr 20, 2026 | April projected at 1.5× 20-day actuals</div>
+
+<script>
+const G='rgba(255,255,255,0.06)',A='#22c55e';
+const tip={backgroundColor:'#001109',borderColor:'rgba(34,197,94,0.3)',borderWidth:1,titleColor:'#fff',bodyColor:'#6b8f75',padding:10};
+new Chart(document.getElementById('c1'),{
+  type:'bar',
+  data:{labels:['Jan','Feb','Mar','Apr (proj.)'],
+    datasets:[
+      {type:'bar',label:'Spend (₹Cr)',data:[0.204,0.262,0.253,0.396],backgroundColor:'rgba(34,197,94,0.18)',borderColor:A,borderWidth:1,borderRadius:5,yAxisID:'y'},
+      {type:'bar',label:'GMV (₹Cr)',data:[0.746,1.686,1.110,3.150],backgroundColor:['rgba(34,197,94,0.35)','rgba(34,197,94,0.5)','rgba(34,197,94,0.65)','rgba(34,197,94,0.9)'],borderColor:A,borderWidth:1,borderRadius:5,yAxisID:'y'},
+      {type:'line',label:'ROAS',data:[3.65,6.43,4.38,7.96],borderColor:'#fbbf24',backgroundColor:'transparent',tension:0.4,pointBackgroundColor:'#fbbf24',pointRadius:5,yAxisID:'y2'}
+    ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{color:'#6b8f75',boxWidth:10,font:{size:11},padding:14}},tooltip:{...tip}},
+    scales:{
+      y:{grid:{color:G},ticks:{color:'#6b8f75',font:{size:11},callback:v=>'₹'+v+'Cr'},position:'left'},
+      y2:{grid:{display:false},ticks:{color:'#fbbf24',font:{size:11},callback:v=>v+'×'},position:'right'},
+      x:{grid:{color:G},ticks:{color:'#6b8f75',font:{size:11}}}
+    }
+  }
+});
+</script>
+</body>
+</html>
