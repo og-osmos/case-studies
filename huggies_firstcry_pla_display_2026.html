@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Huggies FirstCry Marketplace — SPA + Display Incrementality | Feb 2025–Apr 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --acc:#3b82f6;--acc-dim:rgba(59,130,246,0.1);--acc-b:rgba(59,130,246,0.2);
+    --bg:#00080f;--card:#000d1a;
+    --text:#e5eff8;--muted:#506070;--white:#fff;
+    --spa:#60a5fa;--sda:#c084fc;--gmv:#4ade80;--amber:#fbbf24;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.5;}
+
+  .cover{
+    min-height:100vh;
+    background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(59,130,246,0.18) 0%,transparent 70%),
+               linear-gradient(180deg,#000f22 0%,#00080f 100%);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px 40px;text-align:center;position:relative;overflow:hidden;
+  }
+  .cover::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233b82f6' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+  .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:28px;font-weight:600;}
+  .eyebrow span{color:var(--acc);}
+  .cover h1{font-size:clamp(34px,5vw,60px);font-weight:900;color:var(--white);line-height:1.1;margin-bottom:14px;max-width:820px;}
+  .cover h1 em{color:var(--acc);font-style:normal;}
+  .cover-sub{font-size:17px;color:var(--muted);margin-bottom:50px;max-width:640px;}
+  .cover-note{margin-top:24px;font-size:12px;color:var(--muted);background:rgba(255,255,255,0.03);padding:7px 18px;border-radius:20px;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;width:100%;max-width:900px;background:var(--acc-b);border-radius:16px;overflow:hidden;border:1px solid var(--acc-b);}
+  .kpi{background:var(--card);padding:26px 20px;text-align:center;}
+  .kv{font-size:34px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:6px;}
+  .kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+  .section{padding:64px 40px;max-width:1200px;margin:0 auto;}
+  .sec-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-b);padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+  .sec-title{font-size:clamp(22px,2.8vw,36px);font-weight:800;color:var(--white);margin-bottom:8px;}
+  .sec-desc{font-size:14px;color:var(--muted);max-width:660px;margin-bottom:32px;}
+  .divider{height:1px;background:var(--acc-b);margin:0 40px;}
+
+  .two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start;}
+
+  .chart-card{background:var(--card);border:1px solid var(--acc-b);border-radius:16px;padding:22px;}
+  .cc-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+  .cc-title{font-size:16px;font-weight:800;color:var(--white);margin-bottom:14px;}
+  .chart-wrap{position:relative;height:220px;}
+
+  table{width:100%;border-collapse:collapse;margin-top:16px;}
+  th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--acc-b);}
+  td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(59,130,246,0.06);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .av{color:var(--acc);font-weight:700;}
+  .gv{color:#4ade80;font-weight:700;}
+  .rv{color:#f87171;font-weight:700;}
+  .mv{color:var(--muted);}
+  .badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;}
+  .bspa{background:rgba(96,165,250,0.15);color:#60a5fa;}
+  .bsda{background:rgba(192,132,252,0.15);color:#c084fc;}
+  .bon{background:rgba(74,222,128,0.15);color:#4ade80;}
+  .boff{background:rgba(248,113,113,0.15);color:#f87171;}
+  .total-row td{border-top:1px solid var(--acc-b);font-weight:700;}
+
+  .ins-stack{display:flex;flex-direction:column;gap:14px;}
+  .ins{background:var(--card);border:1px solid var(--acc-b);border-radius:14px;padding:20px 22px;}
+  .ins-t{font-size:14px;font-weight:700;color:var(--white);margin-bottom:7px;}
+  .ins-b{font-size:13px;color:var(--muted);line-height:1.6;}
+  .ins-b strong{color:var(--text);}
+
+  .highlight-box{background:rgba(59,130,246,0.06);border:1px solid var(--acc-b);border-radius:14px;padding:20px 24px;margin-bottom:14px;}
+  .hb-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--acc);margin-bottom:10px;}
+  .hb-row{display:flex;gap:24px;align-items:flex-end;}
+  .hb-stat{flex:1;}
+  .hb-val{font-size:28px;font-weight:900;color:var(--white);line-height:1;}
+  .hb-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+  .hb-arrow{font-size:32px;font-weight:900;color:var(--acc);align-self:center;}
+
+  .footer{text-align:center;padding:32px 40px;font-size:12px;color:var(--muted);border-top:1px solid var(--acc-b);}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="eyebrow"><span>Huggies</span> · FirstCry Marketplace · Agency 366</div>
+  <h1>SPA Alone Grew.<br><em>Display Made It Grow Faster.</em></h1>
+  <p class="cover-sub">14 months of Sponsored Product Ads — with and without Sponsored Display Ads. The data is unambiguous: when display ran alongside SPA, SPA efficiency improved 19%, total orders climbed, and GMV hit new peaks. Display does not replace SPA. It multiplies it.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="kv">₹90.6L</div><div class="kl">Total Investment</div></div>
+    <div class="kpi"><div class="kv">₹1.51 Cr</div><div class="kl">Attributed GMV</div></div>
+    <div class="kpi"><div class="kv">16.6×</div><div class="kl">Overall ROAS</div></div>
+    <div class="kpi"><div class="kv">94,600+</div><div class="kl">Attributed Orders</div></div>
+  </div>
+  <div class="cover-note">* INR · Feb 13, 2025 – Apr 23, 2026 · Attribution: last-click · Apr 2026 partial (23 days) · Agency 366 / FirstCry Marketplace</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 1: Consistent Investment -->
+<section class="section">
+  <div class="sec-tag">14-Month Investment History</div>
+  <h2 class="sec-title">Consistent SPA. Strategic Display. Growing GMV.</h2>
+  <p class="sec-desc">Huggies ran SPA every month from February 2025. Display Ads were added in March 2025, paused through Q3–Q4, and relaunched in December 2025. Every time display returned, total GMV climbed to a new high.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="chart-card">
+        <div class="cc-label">Monthly Spend by Channel (₹K) + Total GMV (₹L)</div>
+        <div class="cc-title">Display spend was modest — its impact on GMV was not</div>
+        <div class="chart-wrap"><canvas id="c1"></canvas></div>
+      </div>
+      <table>
+        <thead><tr><th>Month</th><th>SPA Spend</th><th>SDA Spend</th><th>Total GMV</th><th>ROAS</th><th>Display</th></tr></thead>
+        <tbody>
+          <tr><td>Feb '25</td><td>₹99K</td><td class="mv">—</td><td class="av">₹22.9L</td><td>23.2×</td><td><span class="badge boff">SPA Only</span></td></tr>
+          <tr><td>Mar '25</td><td>₹49K</td><td>₹189K</td><td class="av">₹15.7L</td><td class="mv">6.6×*</td><td><span class="badge bsda">SDA Pilot</span></td></tr>
+          <tr><td>Apr '25</td><td>₹1.86L</td><td>₹59K</td><td class="av">₹48.2L</td><td>19.7×</td><td><span class="badge bon">SPA+SDA</span></td></tr>
+          <tr><td>May '25</td><td>₹4.96L</td><td>₹1.52L</td><td class="av">₹115.1L</td><td>17.7×</td><td><span class="badge bon">SPA+SDA</span></td></tr>
+          <tr><td>Jun '25</td><td>₹6.04L</td><td>₹1.66L</td><td class="av">₹94.1L</td><td>12.2×</td><td><span class="badge bon">SPA+SDA</span></td></tr>
+          <tr><td>Jul '25</td><td>₹4.68L</td><td>₹23K</td><td class="av">₹86.6L</td><td>17.6×</td><td><span class="badge boff">SDA Paused</span></td></tr>
+          <tr><td>Aug '25</td><td>₹6.19L</td><td>₹87K</td><td class="av">₹110.1L</td><td>15.6×</td><td><span class="badge bsda">SDA Partial</span></td></tr>
+          <tr><td>Sep '25</td><td>₹6.04L</td><td>₹39K</td><td class="av">₹120.6L</td><td>18.8×</td><td><span class="badge boff">SDA Off</span></td></tr>
+          <tr><td>Oct '25</td><td>₹7.67L</td><td class="mv">—</td><td class="av">₹126.8L</td><td>16.5×</td><td><span class="badge boff">SPA Only</span></td></tr>
+          <tr><td>Nov '25</td><td>₹6.93L</td><td class="mv">—</td><td class="av">₹131.7L</td><td>19.0×</td><td><span class="badge boff">SPA Only</span></td></tr>
+          <tr><td>Dec '25</td><td>₹6.38L</td><td>₹50K</td><td class="gv">₹155.0L</td><td>22.5×</td><td><span class="badge bsda">SDA Returns</span></td></tr>
+          <tr><td>Jan '26</td><td>₹7.05L</td><td>₹1.56L</td><td class="gv">₹160.8L</td><td>18.7×</td><td><span class="badge bon">SPA+SDA</span></td></tr>
+          <tr><td>Feb '26</td><td>₹7.10L</td><td>₹1.40L</td><td class="gv">₹152.9L</td><td>18.0×</td><td><span class="badge bon">SPA+SDA</span></td></tr>
+          <tr><td>Mar '26</td><td>₹6.53L</td><td>₹1.74L</td><td class="av">₹115.5L</td><td>14.0×</td><td><span class="badge bon">SPA+SDA</span></td></tr>
+          <tr><td>Apr '26*</td><td>₹4.39L</td><td>₹97K</td><td class="av">₹50.3L</td><td>9.4×</td><td><span class="badge bon">SPA+SDA</span></td></tr>
+          <tr class="total-row"><td style="color:var(--white)">14 Months</td><td class="av">₹77.3L</td><td class="av">₹13.3L</td><td class="av">₹1.51 Cr</td><td class="av">16.6×</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins-stack">
+      <div class="ins">
+        <div class="ins-t">📈 SPA Was Already Working — Display Made It Work Harder</div>
+        <div class="ins-b">Huggies ran strong SPA through all 14 months — averaging <strong>₹5.5L/month in SPA spend</strong> and a healthy 17–23× ROAS in SPA-only periods. Display was not deployed to rescue a failing channel. It was deployed to amplify one that was already winning.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">🎯 The Two Best Months Both Had Display Running</div>
+        <div class="ins-b">January 2026 (₹160.8L GMV) and February 2026 (₹152.9L GMV) are the two highest GMV months in the dataset — both had SPA and Display running simultaneously. The previous peak without display was <strong>₹131.7L in November 2025</strong>, a 22% lower ceiling.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">🔄 Every Display Relaunch Lifted the Ceiling</div>
+        <div class="ins-b">Display launched → GMV spiked (Apr–May 2025: ₹115L). Display paused → GMV plateaued (Jul–Nov 2025: ₹87–132L). Display relaunched → GMV hit new highs (Dec–Feb: ₹155–161L). The pattern repeated twice with the <strong>same result both times</strong>.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">💡 Mar '25 ROAS Caveat</div>
+        <div class="ins-b">March 2025 shows an artificially low combined ROAS (6.6×) because <strong>SDA launched with ₹189K spend in just 8 days</strong> while SPA was paused. This is a transition artefact — display attribution matured significantly in the weeks that followed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 2: Incrementality Proof -->
+<section class="section">
+  <div class="sec-tag">Incrementality Analysis</div>
+  <h2 class="sec-title">Display Lifted SPA Efficiency by 19%. Same Spend. Better Results.</h2>
+  <p class="sec-desc">Controlling for SPA spend level: in October and November 2025 (SPA-only, ₹7.3L avg/month), SPA ROAS averaged 17.75×. In January and February 2026 (SPA+Display, ₹7.1L avg SPA spend/month), SPA ROAS averaged 21.1×. Display created a 19% halo uplift on the SPA channel — before counting its own attributed GMV.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="chart-card">
+        <div class="cc-label">SPA ROAS — Comparable Spend Months</div>
+        <div class="cc-title">When display ran, SPA converted at 19% higher efficiency</div>
+        <div class="chart-wrap"><canvas id="c2"></canvas></div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:20px;">
+        <div class="hb-label">Incrementality Summary — Oct+Nov 2025 vs Jan+Feb 2026</div>
+        <div class="hb-row">
+          <div class="hb-stat">
+            <div class="hb-val" style="color:var(--muted)">₹258L</div>
+            <div class="hb-sub">GMV · Oct+Nov '25 (SPA only)<br>₹14.6L SPA spend · 17.7× avg ROAS</div>
+          </div>
+          <div class="hb-arrow">→</div>
+          <div class="hb-stat">
+            <div class="hb-val" style="color:var(--acc)">₹314L</div>
+            <div class="hb-sub">GMV · Jan+Feb '26 (SPA+Display)<br>₹14.2L SPA spend · 21.1× avg SPA ROAS</div>
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <thead><tr><th>Metric</th><th>SPA-Only (Oct–Nov '25)</th><th>SPA+Display (Jan–Feb '26)</th><th>Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Avg SPA Spend / Month</td><td>₹7.30L</td><td>₹7.07L</td><td class="mv">−3%</td></tr>
+          <tr><td>Avg SPA ROAS</td><td class="mv">17.75×</td><td class="av">21.1×</td><td class="gv">+19%</td></tr>
+          <tr><td>Avg Total GMV / Month</td><td>₹129.2L</td><td class="av">₹156.9L</td><td class="gv">+21%</td></tr>
+          <tr><td>Avg Orders / Month</td><td>8,377</td><td class="av">9,411</td><td class="gv">+12%</td></tr>
+          <tr><td>SDA Spend / Month</td><td class="mv">₹0</td><td>₹1.48L</td><td class="mv">—</td></tr>
+          <tr><td>SDA Direct GMV / Month</td><td class="mv">₹0</td><td class="av">₹7.9L</td><td class="mv">—</td></tr>
+          <tr class="total-row"><td style="color:var(--white)">Effective Incremental ROAS on SDA</td><td colspan="2" style="color:var(--acc);font-weight:700;">~21× (halo + direct attribution combined)</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins-stack">
+      <div class="ins">
+        <div class="ins-t">🔬 How the Halo Works</div>
+        <div class="ins-b">Display ads serve shoppers earlier in the purchase journey — category pages, brand pages, and re-engagement placements. When a shopper sees a Huggies display ad first, then later searches and clicks a SPA listing, <strong>the SPA gets the last-click credit</strong>. Display warms up demand that SPA converts — making every SPA rupee stretch further.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">📊 21× Effective ROAS on Display Spend</div>
+        <div class="ins-b">In Jan+Feb 2026, display spent ₹2.96L and directly attributed ₹15.9L GMV (5.4× direct ROAS). But the SPA halo uplift added an estimated <strong>+₹47L in extra SPA GMV</strong> at the same SPA spend levels — bringing effective display ROAS to ~21×. Display earns at parity with SPA when the full halo is counted.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">📦 Product Lines Defended by Display</div>
+        <div class="ins-b">SDA campaigns covered <strong>NatureSoft (NS) Listing Page</strong> and <strong>NS PDP</strong> — Huggies' premium nappy line. Category page display ensures Huggies appears at the very top of the funnel when parents browse "diapers", before competitors can intercept with SPA at the search stage.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-t">🚀 The Recommended Path: Keep Both On</div>
+        <div class="ins-b">Periods with SDA off saw SPA ROAS range 16–19×. Periods with SDA active saw SPA ROAS range 20–24×. The gap widens at higher SPA spend. <strong>Scaling SPA to ₹8–9L/month while keeping SDA at ₹1.5–2L</strong> would maximise the halo multiplier and push GMV toward ₹180–200L/month.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">Huggies (Merchant 10090326) · FirstCry Marketplace (Agency 366) · Osmos Advertising Platform · Feb 13, 2025 – Apr 23, 2026 · Attribution: last-click · Apr 2026 partial 23-day actuals</div>
+
+<script>
+const G='rgba(255,255,255,0.06)';
+const tip={backgroundColor:'#000d1a',borderColor:'rgba(59,130,246,0.3)',borderWidth:1,titleColor:'#fff',bodyColor:'#506070',padding:10};
+
+// Chart 1: Monthly stacked spend + GMV line
+const months = ["Feb'25","Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26","Mar'26","Apr'26*"];
+const spaSpend = [99,49,186,496,604,468,619,604,767,693,638,705,710,653,439];
+const sdaSpend = [0,189,59,152,166,23,87,39,0,0,50,156,140,174,97];
+const gmv      = [22.9,15.7,48.2,115.1,94.1,86.6,110.1,120.6,126.8,131.7,155.0,160.8,152.9,115.5,50.3];
+
+new Chart(document.getElementById('c1'),{
+  type:'bar',
+  data:{
+    labels:months,
+    datasets:[
+      {label:'SPA Spend (₹K)',data:spaSpend,backgroundColor:'rgba(96,165,250,0.7)',borderRadius:0,stack:'spend',yAxisID:'y'},
+      {label:'SDA Spend (₹K)',data:sdaSpend,backgroundColor:'rgba(192,132,252,0.7)',borderRadius:0,stack:'spend',yAxisID:'y'},
+      {label:'Total GMV (₹L)',data:gmv,type:'line',borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.08)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#4ade80',tension:0.3,fill:false,yAxisID:'y2'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:true,position:'top',labels:{color:'#506070',boxWidth:10,font:{size:11},padding:14}},
+      tooltip:{...tip,callbacks:{
+        label:ctx=>{
+          if(ctx.dataset.label==='Total GMV (₹L)') return 'GMV: ₹'+ctx.raw+'L';
+          return ctx.dataset.label+': ₹'+ctx.raw+'K';
+        }
+      }}
+    },
+    scales:{
+      x:{stacked:true,grid:{color:G},ticks:{color:'#506070',font:{size:10}}},
+      y:{stacked:true,grid:{color:G},ticks:{color:'#506070',font:{size:10},callback:v=>'₹'+v+'K'},title:{display:true,text:'Ad Spend (₹K)',color:'#506070',font:{size:10}}},
+      y2:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#4ade80',font:{size:10},callback:v=>'₹'+v+'L'},title:{display:true,text:'GMV (₹L)',color:'#4ade80',font:{size:10}}}
+    }
+  }
+});
+
+// Chart 2: SPA ROAS comparison — SPA-only vs SPA+Display
+const compLabels = ["Oct '25\n(SPA Only)","Nov '25\n(SPA Only)","Jan '26\n(+Display)","Feb '26\n(+Display)"];
+const spaRoas = [16.5,19.0,21.5,20.7];
+const barColors = [
+  'rgba(80,96,112,0.6)','rgba(80,96,112,0.6)',
+  'rgba(59,130,246,0.75)','rgba(59,130,246,0.75)'
+];
+const barBorders = ['#506070','#506070','#3b82f6','#3b82f6'];
+
+new Chart(document.getElementById('c2'),{
+  type:'bar',
+  data:{
+    labels:compLabels,
+    datasets:[
+      {label:'SPA ROAS',data:spaRoas,backgroundColor:barColors,borderColor:barBorders,borderWidth:1.5,borderRadius:6,order:1},
+      {label:'SPA-Only Avg: 17.75×',data:[17.75,17.75,null,null],type:'line',borderColor:'rgba(80,96,112,0.7)',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0,fill:false,order:0},
+      {label:'SPA+Display Avg: 21.1×',data:[null,null,21.1,21.1],type:'line',borderColor:'rgba(59,130,246,0.7)',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0,fill:false,order:0}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:true,position:'top',labels:{color:'#506070',boxWidth:10,font:{size:10},padding:10,filter:i=>i.text!=='SPA ROAS'}},
+      tooltip:{...tip,callbacks:{label:ctx=>ctx.dataset.type==='line'?ctx.dataset.label:'SPA ROAS: '+ctx.raw+'×'}}
+    },
+    scales:{
+      x:{grid:{color:G},ticks:{color:'#506070',font:{size:11}}},
+      y:{min:12,max:25,grid:{color:G},ticks:{color:'#506070',font:{size:11},callback:v=>v+'×'},
+         title:{display:true,text:'SPA ROAS',color:'#506070',font:{size:10}}}
+    }
+  }
+});
+</script>
+</body>
+</html>

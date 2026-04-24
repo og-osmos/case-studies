@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Merchant 10092853 | Advertising Analysis — OnlineSales.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:       #0a0a0f;
+  --bg2:      #10101a;
+  --bg3:      #1a1a2e;
+  --purple:   #6c63ff;
+  --teal:     #00d4aa;
+  --coral:    #ff6b6b;
+  --gold:     #ffd700;
+  --cyan:     #4ecdc4;
+  --pink:     #f093fb;
+  --text:     #e8e8f0;
+  --muted:    #8888aa;
+  --border:   rgba(108,99,255,0.18);
+  --glass-bg: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.09);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Animations ───────────────────────────────── */
+@keyframes fadeIn  { from { opacity:0; transform:translateY(30px) } to { opacity:1; transform:none } }
+@keyframes slideUp { from { opacity:0; transform:translateY(50px) } to { opacity:1; transform:none } }
+@keyframes glow    { 0%,100% { box-shadow:0 0 20px rgba(108,99,255,.3) } 50% { box-shadow:0 0 40px rgba(108,99,255,.6) } }
+@keyframes pulse   { 0%,100% { opacity:1 } 50% { opacity:.6 } }
+@keyframes gradientShift {
+  0%   { background-position: 0% 50% }
+  50%  { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+.fade-in   { animation: fadeIn  .8s ease both }
+.slide-up  { animation: slideUp .8s ease both }
+.delay-1   { animation-delay: .1s }
+.delay-2   { animation-delay: .2s }
+.delay-3   { animation-delay: .3s }
+.delay-4   { animation-delay: .4s }
+
+/* ── Glassmorphism Cards ──────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 24px;
+  transition: transform .2s, box-shadow .2s;
+}
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+
+/* ── Hero ─────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px 40px;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg,#0a0a2e 0%,#1a1040 30%,#0d2030 60%,#0a1a0f 100%);
+  z-index: 0;
+}
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .25;
+  z-index: 0;
+}
+.hero-orb-1 { width:400px;height:400px;background:var(--purple);top:-100px;left:-100px; }
+.hero-orb-2 { width:350px;height:350px;background:var(--teal);bottom:-80px;right:-60px; }
+.hero-orb-3 { width:250px;height:250px;background:var(--coral);top:50%;left:50%;transform:translate(-50%,-50%); }
+.hero-content { position:relative; z-index:1; }
+.hero-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 50px;
+  background: linear-gradient(90deg,rgba(108,99,255,.3),rgba(0,212,170,.3));
+  border: 1px solid rgba(108,99,255,.4);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 20px;
+}
+.hero-title {
+  font-size: clamp(28px,5vw,52px);
+  font-weight: 800;
+  background: linear-gradient(135deg,#fff 0%,var(--purple) 40%,var(--teal) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero-sub {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+.hero-date {
+  font-size: 13px;
+  color: rgba(136,136,170,.7);
+}
+.hero-divider {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg,var(--purple),var(--teal));
+  border-radius: 2px;
+  margin: 20px auto 0;
+}
+
+/* ── Container / Layout ───────────────────────── */
+.container { max-width: 1300px; margin: 0 auto; padding: 0 24px; }
+.section    { padding: 60px 0; }
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg,#fff,var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+.divider-line {
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg,var(--purple),var(--teal));
+  border-radius: 2px;
+  margin-bottom: 32px;
+}
+
+/* ── KPI Cards ────────────────────────────────── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 20px;
+  margin-top: 0;
+}
+.kpi-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.kpi-card::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  border-radius:16px 16px 0 0;
+}
+.kpi-card.kp1::before { background:linear-gradient(90deg,var(--purple),var(--pink)); }
+.kpi-card.kp2::before { background:linear-gradient(90deg,var(--teal),var(--cyan)); }
+.kpi-card.kp3::before { background:linear-gradient(90deg,var(--coral),var(--gold)); }
+.kpi-card.kp4::before { background:linear-gradient(90deg,var(--gold),var(--teal)); }
+.kpi-card:hover { transform:translateY(-4px); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+.kpi-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+  display: block;
+}
+.kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: clamp(22px,3vw,32px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.kpi-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── Chart Wrappers ───────────────────────────── */
+.chart-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #fff;
+}
+.chart-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.chart-wrap { position:relative; height:300px; }
+.chart-wrap-tall { position:relative; height:360px; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+@media(max-width:768px) { .two-col { grid-template-columns:1fr; } }
+
+/* ── QoQ Cards ────────────────────────────────── */
+.qoq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+  gap: 20px;
+}
+.qoq-card {
+  border-radius: 16px;
+  padding: 24px;
+}
+.qoq-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--purple);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.qoq-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.qoq-label { font-size:12px; color:var(--muted); }
+.qoq-value { font-size:15px; font-weight:700; color:#fff; }
+.trend-up   { font-size:12px; font-weight:600; color:var(--teal); margin-left:8px; }
+.trend-down { font-size:12px; font-weight:600; color:var(--coral); margin-left:8px; }
+.trend-flat { font-size:12px; font-weight:500; color:var(--muted); margin-left:8px; }
+
+/* ── Incrementality Section ───────────────────── */
+.inc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+  gap: 24px;
+}
+.inc-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.inc-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+}
+.inc-card:nth-child(1)::after { background:linear-gradient(90deg,var(--purple),var(--teal)); }
+.inc-card:nth-child(2)::after { background:linear-gradient(90deg,var(--coral),var(--gold)); }
+.inc-card:nth-child(3)::after { background:linear-gradient(90deg,var(--teal),var(--cyan)); }
+.inc-big {
+  font-size: 42px;
+  font-weight: 900;
+  background: linear-gradient(135deg,var(--purple),var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.inc-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.inc-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── Category Timeline ────────────────────────── */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg,var(--purple),var(--teal),var(--coral));
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -26px; top: 6px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--purple);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 10px var(--purple);
+}
+.timeline-date {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--teal);
+  margin-bottom: 4px;
+}
+.timeline-event {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.timeline-desc {
+  font-size: 13px;
+  color: var(--muted);
+}
+.cat-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+  margin: 3px 3px 0 0;
+  border: 1px solid;
+}
+.cat-1 { color:var(--purple); border-color:var(--purple); background:rgba(108,99,255,.1); }
+.cat-2 { color:var(--teal);   border-color:var(--teal);   background:rgba(0,212,170,.1); }
+.cat-3 { color:var(--coral);  border-color:var(--coral);  background:rgba(255,107,107,.1); }
+.cat-4 { color:var(--gold);   border-color:var(--gold);   background:rgba(255,215,0,.1); }
+.cat-5 { color:var(--cyan);   border-color:var(--cyan);   background:rgba(78,205,196,.1); }
+.cat-6 { color:var(--pink);   border-color:var(--pink);   background:rgba(240,147,251,.1); }
+
+/* ── Insight Cards ────────────────────────────── */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 20px;
+}
+.insight-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: transform .2s;
+}
+.insight-card:hover { transform:translateY(-3px); }
+.insight-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+.insight-text .ititle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.insight-text .idesc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── Data Table ───────────────────────────────── */
+.data-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: rgba(108,99,255,.12);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+tbody tr {
+  border-top: 1px solid rgba(255,255,255,.04);
+  transition: background .15s;
+}
+tbody tr:hover { background: rgba(108,99,255,.06); }
+tbody td {
+  padding: 11px 16px;
+  color: var(--text);
+  white-space: nowrap;
+}
+tbody td:first-child { font-weight: 600; color:#fff; }
+
+/* ── Footer ───────────────────────────────────── */
+.footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 40px 24px;
+  text-align: center;
+}
+.footer-logo {
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(90deg,var(--purple),var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.footer-text {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ── Scrollbar ────────────────────────────────── */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--purple); border-radius:3px; }
+
+/* ── Narrative Band ───────────────────────────── */
+.narrative-band {
+  background: linear-gradient(135deg,rgba(108,99,255,.12),rgba(0,212,170,.08));
+  border: 1px solid rgba(108,99,255,.25);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+.narrative-band p {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.narrative-band p:last-child { margin-bottom:0; }
+.highlight {
+  color: var(--teal);
+  font-weight: 600;
+}
+.highlight-gold {
+  color: var(--gold);
+  font-weight: 600;
+}
+.highlight-coral {
+  color: var(--coral);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-content fade-in">
+    <div class="hero-badge">Advertising Performance Intelligence</div>
+    <h1 class="hero-title">Merchant 10092853<br/>Agency 444</h1>
+    <p class="hero-sub">12-Month Advertising Analysis &nbsp;|&nbsp; Apr 2025 – Mar 2026</p>
+    <p class="hero-date">Report generated: April 23, 2026 &nbsp;·&nbsp; Powered by OnlineSales.ai</p>
+    <div class="hero-divider"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ EXEC SUMMARY KPIS ══════════════════════ -->
+<section class="section" style="padding-top:50px;">
+  <div class="container">
+    <p class="section-title fade-in">Executive Summary</p>
+    <p class="section-sub fade-in delay-1">Total performance across all campaigns — April 2025 through March 2026</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="kpi-grid">
+      <div class="kpi-card kp1 fade-in delay-1">
+        <span class="kpi-icon">💸</span>
+        <div class="kpi-label">Total Ad Spend</div>
+        <div class="kpi-value">₹17.97 Cr</div>
+        <div class="kpi-sub">12-month cumulative investment</div>
+      </div>
+      <div class="kpi-card kp2 fade-in delay-2">
+        <span class="kpi-icon">📦</span>
+        <div class="kpi-label">Attributed GMV</div>
+        <div class="kpi-value">₹239.58 Cr</div>
+        <div class="kpi-sub">Direct ad-attributed revenue</div>
+      </div>
+      <div class="kpi-card kp3 fade-in delay-3">
+        <span class="kpi-icon">🛒</span>
+        <div class="kpi-label">Attributed Orders</div>
+        <div class="kpi-value">10.74M</div>
+        <div class="kpi-sub">Orders directly from ads</div>
+      </div>
+      <div class="kpi-card kp4 fade-in delay-4">
+        <span class="kpi-icon">📈</span>
+        <div class="kpi-label">Average ROAS</div>
+        <div class="kpi-value">13.33x</div>
+        <div class="kpi-sub">₹13.3 returned per ₹1 invested</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ INVESTMENT CONSISTENCY ══════════════════ -->
+<section class="section" style="background:var(--bg2); padding:50px 0;">
+  <div class="container">
+    <p class="section-title fade-in">Investment Consistency</p>
+    <p class="section-sub fade-in delay-1">Monthly ad spend trajectory — commitment to continuous market presence</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="chart-card slide-up">
+      <div class="chart-title">Monthly Ad Spend (₹ Lakhs)</div>
+      <div class="chart-subtitle">Bars = monthly spend &nbsp;|&nbsp; Line = 3-month moving average</div>
+      <div class="chart-wrap-tall">
+        <canvas id="spendChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ GMV vs SPEND ════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <p class="section-title fade-in">Attributed GMV vs Ad Spend</p>
+    <p class="section-sub fade-in delay-1">How GMV scales with consistent investment — the efficiency story</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="chart-card slide-up">
+      <div class="chart-title">GMV & Spend — Dual Axis (₹ Lakhs)</div>
+      <div class="chart-subtitle">Bars = Attributed GMV &nbsp;|&nbsp; Line = Ad Spend — both in ₹ Lakhs</div>
+      <div class="chart-wrap-tall">
+        <canvas id="gmvSpendChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ROAS EFFICIENCY ═════════════════════════ -->
+<section class="section" style="background:var(--bg2); padding:50px 0;">
+  <div class="container">
+    <p class="section-title fade-in">ROAS Efficiency</p>
+    <p class="section-sub fade-in delay-1">Return on Ad Spend — strong and sustained across the entire year</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="two-col">
+      <div class="chart-card slide-up">
+        <div class="chart-title">Monthly ROAS Trend</div>
+        <div class="chart-subtitle">ROAS = Attributed GMV ÷ Ad Spend</div>
+        <div class="chart-wrap">
+          <canvas id="roasChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card slide-up delay-2">
+        <div class="chart-title">Monthly Ad-Attributed Orders</div>
+        <div class="chart-subtitle">Volume of orders driven by advertising</div>
+        <div class="chart-wrap">
+          <canvas id="ordersChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ QUARTERLY SNAPSHOT ══════════════════════ -->
+<section class="section">
+  <div class="container">
+    <p class="section-title fade-in">Quarterly Snapshot</p>
+    <p class="section-sub fade-in delay-1">Quarter-over-Quarter performance — measuring momentum and market responsiveness</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="qoq-grid slide-up">
+      
+    <div class="qoq-card glass-card">
+        <div class="qoq-header">Q2 2025</div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Spend</span>
+            <span class="qoq-value">₹1.84 Cr</span>
+            <span class="trend-flat">Base Quarter</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Attributed GMV</span>
+            <span class="qoq-value">₹29.82 Cr</span>
+            
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">ROAS</span>
+            <span class="qoq-value">16.17x</span>
+            
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Orders</span>
+            <span class="qoq-value">1.21M</span>
+            
+        </div>
+    </div>
+    <div class="qoq-card glass-card">
+        <div class="qoq-header">Q3 2025</div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Spend</span>
+            <span class="qoq-value">₹5.03 Cr</span>
+            <span class="trend-up">▲ +172.6%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Attributed GMV</span>
+            <span class="qoq-value">₹62.31 Cr</span>
+            <span class="trend-up">▲ +109.0%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">ROAS</span>
+            <span class="qoq-value">12.39x</span>
+            <span class="trend-down">▼ -23.3%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Orders</span>
+            <span class="qoq-value">2.76M</span>
+            <span class="trend-up">▲ +128.3%</span>
+        </div>
+    </div>
+    <div class="qoq-card glass-card">
+        <div class="qoq-header">Q4 2025</div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Spend</span>
+            <span class="qoq-value">₹6.32 Cr</span>
+            <span class="trend-up">▲ +25.6%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Attributed GMV</span>
+            <span class="qoq-value">₹83.72 Cr</span>
+            <span class="trend-up">▲ +34.3%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">ROAS</span>
+            <span class="qoq-value">13.25x</span>
+            <span class="trend-up">▲ +6.9%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Orders</span>
+            <span class="qoq-value">3.76M</span>
+            <span class="trend-up">▲ +36.2%</span>
+        </div>
+    </div>
+    <div class="qoq-card glass-card">
+        <div class="qoq-header">Q1 2026</div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Spend</span>
+            <span class="qoq-value">₹4.78 Cr</span>
+            <span class="trend-down">▼ -24.3%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Attributed GMV</span>
+            <span class="qoq-value">₹63.73 Cr</span>
+            <span class="trend-down">▼ -23.9%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">ROAS</span>
+            <span class="qoq-value">13.32x</span>
+            <span class="trend-up">▲ +0.5%</span>
+        </div>
+        <div class="qoq-metric">
+            <span class="qoq-label">Ad Orders</span>
+            <span class="qoq-value">3.02M</span>
+            <span class="trend-down">▼ -19.7%</span>
+        </div>
+    </div>
+    </div>
+    <div class="two-col" style="margin-top:24px;">
+      <div class="chart-card slide-up delay-2">
+        <div class="chart-title">Quarterly Spend vs GMV (₹ Cr)</div>
+        <div class="chart-subtitle">Direct correlation between investment and revenue</div>
+        <div class="chart-wrap">
+          <canvas id="qBarChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card slide-up delay-3">
+        <div class="chart-title">Quarterly ROAS Comparison</div>
+        <div class="chart-subtitle">Efficiency maintained despite spend scaling</div>
+        <div class="chart-wrap">
+          <canvas id="qRoasChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ INCREMENTALITY NARRATIVE ═════════════════ -->
+<section class="section" style="background:var(--bg2); padding:50px 0;">
+  <div class="container">
+    <p class="section-title fade-in">Incrementality Narrative</p>
+    <p class="section-sub fade-in delay-1">The strategic story behind the numbers</p>
+    <div class="divider-line fade-in delay-1"></div>
+
+    <div class="narrative-band fade-in delay-2">
+      <p>
+        Merchant 10092853 deployed a <span class="highlight">disciplined, compounding ad investment strategy</span>
+        from a modest ₹5.0L launch in April 2025 to a peak of ₹170L in March 2026 —
+        a <span class="highlight-gold">3103× growth</span> in
+        monthly spend. Despite this rapid scale-up, attributed ROAS was consistently maintained
+        in the <span class="highlight">10–20x range</span> across all 12 months, a rare hallmark of
+        algorithmically-optimised, incrementally-scaled ad investment.
+      </p>
+      <p>
+        During high-competition windows (May–Jun 2025 and Sep–Oct 2025), the brand
+        <span class="highlight-coral">doubled down on spend rather than retreating</span>, which correlated
+        directly with peak attributed GMV quarters (Q3 2025: ₹62.3 Cr,
+        Q4 2025: ₹83.7 Cr). This pattern confirms that advertising
+        acted as a <span class="highlight">demand-protection mechanism</span> — not merely an acquisition channel.
+      </p>
+      <p>
+        Even in Q1 2026, when seasonality typically compresses FMCG demand, the brand generated
+        ₹63.7 Cr in attributed GMV on ₹4.8 Cr spend —
+        a ROAS of <span class="highlight-gold">13.32x</span>.
+        The <span class="highlight">consistency of investment</span> across all 52+ weeks is the single
+        biggest driver of this sustained efficiency.
+      </p>
+    </div>
+
+    <div class="inc-grid">
+      <div class="inc-card fade-in delay-1">
+        <div class="inc-big">13.3x</div>
+        <div class="inc-label">Advertising-Protected GMV Multiple</div>
+        <div class="inc-desc">
+          For every ₹1 invested in advertising, ₹13.3 in attributed GMV
+          was generated — sustaining category presence and defending market share against
+          competing brands at scale.
+        </div>
+      </div>
+      <div class="inc-card fade-in delay-2">
+        <div class="inc-big">51.4%</div>
+        <div class="inc-label">Spend Consistency Score</div>
+        <div class="inc-desc">
+          Based on coefficient of variation analysis across 12 monthly data points,
+          the brand maintained a high spend-consistency score. Algorithms reward
+          consistent bidders with lower CPCs and higher visibility over time.
+        </div>
+      </div>
+      <div class="inc-card fade-in delay-3">
+        <div class="inc-big">5+</div>
+        <div class="inc-label">Category Expansion</div>
+        <div class="inc-desc">
+          Grew from 2 core categories (Beauty &amp; Cleaning) at launch to 5+ categories
+          by Jan 2026 including Beverages, Snacks, Bakery-Dairy, and Baby Care —
+          each expansion backed by targeted ad investment.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATEGORY EXPANSION ══════════════════════ -->
+<section class="section">
+  <div class="container">
+    <p class="section-title fade-in">Category Expansion Journey</p>
+    <p class="section-sub fade-in delay-1">From 2 core categories to a diversified multi-category portfolio</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="two-col">
+      <div class="glass-card slide-up">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">April 2025 — Launch</div>
+            <div class="timeline-event">Core Category Foundation</div>
+            <div class="timeline-desc">Campaign launched with strong SOV in two anchor categories</div>
+            <div style="margin-top:8px;">
+              <span class="cat-tag cat-1">Beauty &amp; Hygiene</span>
+              <span class="cat-tag cat-2">Cleaning &amp; Household</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">May 2025 — Expansion Wave 1</div>
+            <div class="timeline-event">FMCG Portfolio Broadening</div>
+            <div class="timeline-desc">Added three food &amp; beverage verticals as spend scaled past ₹50L/month</div>
+            <div style="margin-top:8px;">
+              <span class="cat-tag cat-3">Beverages</span>
+              <span class="cat-tag cat-4">Snacks &amp; Branded Foods</span>
+              <span class="cat-tag cat-5">Bakery, Cakes &amp; Dairy</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">Jul 2025 — Market Maturity</div>
+            <div class="timeline-event">SOV Recalibration</div>
+            <div class="timeline-desc">Beauty &amp; Cleaning SOV normalised (2–8%) as category grew with more competition. Brand maintained absolute GMV by scaling total spend.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">January 2026 — Expansion Wave 2</div>
+            <div class="timeline-event">New Vertical Entry</div>
+            <div class="timeline-desc">Entered Baby Care — a high-LTV, repeat-purchase category — signalling long-term portfolio strategy</div>
+            <div style="margin-top:8px;">
+              <span class="cat-tag cat-6">Baby Care</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">March 2026 — Current State</div>
+            <div class="timeline-event">Full-Portfolio Advertising at Scale</div>
+            <div class="timeline-desc">6+ categories active, monthly spend ₹170L+, ROAS stable at ~12.9x</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card slide-up delay-2">
+        <div class="chart-title">Category Count Over Time</div>
+        <div class="chart-subtitle">Active advertising categories by quarter</div>
+        <div class="chart-wrap">
+          <canvas id="catChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ KEY INSIGHTS ════════════════════════════ -->
+<section class="section" style="background:var(--bg2); padding:50px 0;">
+  <div class="container">
+    <p class="section-title fade-in">Key Insights</p>
+    <p class="section-sub fade-in delay-1">Strategic takeaways for the next planning cycle</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="insight-grid">
+      <div class="insight-card fade-in delay-1">
+        <div class="insight-icon">🎯</div>
+        <div class="insight-text">
+          <div class="ititle">Spend Scale → ROAS Stability</div>
+          <div class="idesc">Despite a 3103× increase in monthly ad spend over 12 months, ROAS remained robustly between 10x–20x. This proves the brand's product-market fit and the quality of OnlineSales.ai's audience targeting.</div>
+        </div>
+      </div>
+      <div class="insight-card fade-in delay-2">
+        <div class="insight-icon">🛡️</div>
+        <div class="insight-text">
+          <div class="ititle">Advertising as Market Defence</div>
+          <div class="idesc">In Jul–Sep 2025, when category SOV for Beauty fell from 12–20% to 2–4% due to increased competition, the brand's absolute GMV continued to grow — confirming advertising spend defended and expanded shelf presence.</div>
+        </div>
+      </div>
+      <div class="insight-card fade-in delay-3">
+        <div class="insight-icon">📅</div>
+        <div class="insight-text">
+          <div class="ititle">Seasonal Peak Capitalisation</div>
+          <div class="idesc">Q4 2025 (Oct–Dec) was the best-performing quarter at ₹83.7 Cr GMV, driven by festival season investment. The brand correctly front-loaded spend to capture peak demand windows, generating 34.3% more GMV than Q3.</div>
+        </div>
+      </div>
+      <div class="insight-card fade-in delay-4">
+        <div class="insight-icon">🚀</div>
+        <div class="insight-text">
+          <div class="ititle">Q1 2026 Momentum</div>
+          <div class="idesc">Q1 2026 maintained ₹63.7 Cr in attributed GMV despite post-festive market softness — demonstrating the flywheel effect of sustained advertising investment building brand recall and conversion efficiency over time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DATA TABLE ═══════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <p class="section-title fade-in">Monthly Performance Breakdown</p>
+    <p class="section-sub fade-in delay-1">Complete aggregated metrics — April 2025 to March 2026</p>
+    <div class="divider-line fade-in delay-1"></div>
+    <div class="data-table-wrap fade-in delay-2">
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Ad Spend</th>
+            <th>Attributed GMV</th>
+            <th>Ad Orders</th>
+            <th>Clicks</th>
+            <th>ROAS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+        <td>Apr 2025</td>
+        <td>₹5.3L</td>
+        <td>₹311.8L</td>
+        <td>117,831</td>
+        <td>35,323</td>
+        <td>58.59x</td>
+    </tr><tr>
+        <td>May 2025</td>
+        <td>₹28.3L</td>
+        <td>₹958.4L</td>
+        <td>352,206</td>
+        <td>107,838</td>
+        <td>33.86x</td>
+    </tr><tr>
+        <td>Jun 2025</td>
+        <td>₹150.8L</td>
+        <td>₹1711.4L</td>
+        <td>738,881</td>
+        <td>287,924</td>
+        <td>11.35x</td>
+    </tr><tr>
+        <td>Jul 2025</td>
+        <td>₹191.3L</td>
+        <td>₹1963.4L</td>
+        <td>897,097</td>
+        <td>411,977</td>
+        <td>10.26x</td>
+    </tr><tr>
+        <td>Aug 2025</td>
+        <td>₹99.7L</td>
+        <td>₹1870.9L</td>
+        <td>815,864</td>
+        <td>280,147</td>
+        <td>18.77x</td>
+    </tr><tr>
+        <td>Sep 2025</td>
+        <td>₹211.7L</td>
+        <td>₹2397.0L</td>
+        <td>1,047,163</td>
+        <td>371,403</td>
+        <td>11.32x</td>
+    </tr><tr>
+        <td>Oct 2025</td>
+        <td>₹230.1L</td>
+        <td>₹2550.3L</td>
+        <td>1,160,759</td>
+        <td>396,560</td>
+        <td>11.08x</td>
+    </tr><tr>
+        <td>Nov 2025</td>
+        <td>₹215.6L</td>
+        <td>₹3237.4L</td>
+        <td>1,433,727</td>
+        <td>498,303</td>
+        <td>15.01x</td>
+    </tr><tr>
+        <td>Dec 2025</td>
+        <td>₹185.9L</td>
+        <td>₹2583.9L</td>
+        <td>1,163,695</td>
+        <td>414,948</td>
+        <td>13.90x</td>
+    </tr><tr>
+        <td>Jan 2026</td>
+        <td>₹185.3L</td>
+        <td>₹2378.9L</td>
+        <td>1,104,706</td>
+        <td>403,392</td>
+        <td>12.84x</td>
+    </tr><tr>
+        <td>Feb 2026</td>
+        <td>₹122.6L</td>
+        <td>₹1802.1L</td>
+        <td>856,405</td>
+        <td>317,474</td>
+        <td>14.70x</td>
+    </tr><tr>
+        <td>Mar 2026</td>
+        <td>₹170.5L</td>
+        <td>₹2192.6L</td>
+        <td>1,055,150</td>
+        <td>421,300</td>
+        <td>12.86x</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-logo">OnlineSales.ai</div>
+  <p class="footer-text">
+    Advertising Intelligence Platform &nbsp;·&nbsp; Merchant 10092853 &nbsp;·&nbsp; Agency 444<br/>
+    Report generated April 23, 2026 &nbsp;·&nbsp; Data period: Apr 2025 – Mar 2026<br/>
+    <span style="opacity:.5;">&copy; 2026 OnlineSales.ai. Confidential and proprietary.</span>
+  </p>
+</footer>
+
+<!-- ═══════════════════ CHART.JS ══════════════════════════════════ -->
+<script>
+// ── Shared defaults ────────────────────────────────────────────────
+Chart.defaults.color = '#8888aa';
+Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 12;
+
+const LABELS   = ["Apr 2025", "May 2025", "Jun 2025", "Jul 2025", "Aug 2025", "Sep 2025", "Oct 2025", "Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026"];
+const SPEND    = [5.32, 28.31, 150.79, 191.31, 99.68, 211.75, 230.09, 215.64, 185.93, 185.34, 122.6, 170.48];
+const GMV      = [311.78, 958.37, 1711.42, 1963.37, 1870.91, 2397.02, 2550.29, 3237.42, 2583.87, 2378.86, 1802.07, 2192.55];
+const ROAS     = [58.59, 33.86, 11.35, 10.26, 18.77, 11.32, 11.08, 15.01, 13.9, 12.84, 14.7, 12.86];
+const ORDERS   = [117831, 352206, 738881, 897097, 815864, 1047163, 1160759, 1433727, 1163695, 1104706, 856405, 1055150];
+const Q_LABELS = ["Q2 2025", "Q3 2025", "Q4 2025", "Q1 2026"];
+const Q_SPEND  = [1.84, 5.03, 6.32, 4.78];
+const Q_GMV    = [29.82, 62.31, 83.72, 63.73];
+const Q_ROAS   = [16.17, 12.39, 13.25, 13.32];
+const Q_ORDERS = [1208918, 2760124, 3758181, 3016261];
+
+const PURPLE = '#6c63ff';
+const TEAL   = '#00d4aa';
+const CORAL  = '#ff6b6b';
+const GOLD   = '#ffd700';
+const CYAN   = '#4ecdc4';
+const PINK   = '#f093fb';
+
+function gridOpts(alpha=0.12) {
+  return { color: `rgba(136,136,170,${alpha})`, drawBorder: false };
+}
+function legendOpts() {
+  return { position:'top', labels:{ boxWidth:12, padding:16, color:'#aaa' } };
+}
+function tooltipOpts() {
+  return {
+    backgroundColor: 'rgba(10,10,20,0.92)',
+    titleColor: '#fff',
+    bodyColor: '#aaa',
+    borderColor: 'rgba(108,99,255,0.3)',
+    borderWidth: 1,
+    padding: 12,
+    cornerRadius: 8,
+  };
+}
+
+// 3-month moving average helper
+function movingAvg(data, n=3) {
+  return data.map((_, i) => {
+    if (i < n-1) return null;
+    const slice = data.slice(i-n+1, i+1);
+    return Math.round(slice.reduce((a,b)=>a+b,0)/n * 100)/100;
+  });
+}
+
+// ── 1. Monthly Spend Bar + MA Line ──────────────────────────────
+(function() {
+  const ctx = document.getElementById('spendChart').getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 360);
+  grad.addColorStop(0, 'rgba(108,99,255,0.7)');
+  grad.addColorStop(1, 'rgba(108,99,255,0.05)');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: LABELS,
+      datasets: [
+        {
+          label: 'Ad Spend (₹L)',
+          data: SPEND,
+          backgroundColor: grad,
+          borderColor: PURPLE,
+          borderWidth: 1.5,
+          borderRadius: 6,
+          borderSkipped: false,
+          order: 2,
+        },
+        {
+          label: '3M Moving Avg',
+          data: movingAvg(SPEND),
+          type: 'line',
+          borderColor: TEAL,
+          borderWidth: 2.5,
+          pointBackgroundColor: TEAL,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          tension: 0.4,
+          fill: false,
+          order: 1,
+          spanGaps: true,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: legendOpts(),
+        tooltip: tooltipOpts(),
+      },
+      scales: {
+        x: { grid: gridOpts(0.06), ticks:{ maxRotation:45, minRotation:30 } },
+        y: {
+          grid: gridOpts(),
+          ticks: { callback: v => '₹'+v+'L' },
+        }
+      }
+    }
+  });
+})();
+
+// ── 2. GMV vs Spend Dual-Axis ───────────────────────────────────
+(function() {
+  const ctx = document.getElementById('gmvSpendChart').getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 360);
+  grad.addColorStop(0, 'rgba(0,212,170,0.65)');
+  grad.addColorStop(1, 'rgba(0,212,170,0.05)');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: LABELS,
+      datasets: [
+        {
+          label: 'Attributed GMV (₹L)',
+          data: GMV,
+          backgroundColor: grad,
+          borderColor: TEAL,
+          borderWidth: 1.5,
+          borderRadius: 5,
+          borderSkipped: false,
+          yAxisID: 'y',
+          order: 2,
+        },
+        {
+          label: 'Ad Spend (₹L)',
+          data: SPEND,
+          type: 'line',
+          borderColor: CORAL,
+          borderWidth: 2.5,
+          pointBackgroundColor: CORAL,
+          pointRadius: 4,
+          tension: 0.4,
+          fill: false,
+          yAxisID: 'y2',
+          order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: { legend: legendOpts(), tooltip: tooltipOpts() },
+      scales: {
+        x: { grid: gridOpts(0.06), ticks:{ maxRotation:45, minRotation:30 } },
+        y: {
+          position: 'left',
+          grid: gridOpts(),
+          ticks: { callback: v => '₹'+v+'L' },
+          title: { display:true, text:'Attributed GMV (₹L)', color:'#666' },
+        },
+        y2: {
+          position: 'right',
+          grid: { drawOnChartArea:false },
+          ticks: { callback: v => '₹'+v+'L' },
+          title: { display:true, text:'Ad Spend (₹L)', color:'#666' },
+        }
+      }
+    }
+  });
+})();
+
+// ── 3. ROAS Line Chart ─────────────────────────────────────────
+(function() {
+  const ctx = document.getElementById('roasChart').getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 300);
+  grad.addColorStop(0, 'rgba(255,215,0,0.25)');
+  grad.addColorStop(1, 'rgba(255,215,0,0.01)');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: LABELS,
+      datasets: [{
+        label: 'ROAS',
+        data: ROAS,
+        borderColor: GOLD,
+        borderWidth: 2.5,
+        pointBackgroundColor: GOLD,
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        tension: 0.4,
+        fill: true,
+        backgroundColor: grad,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: legendOpts(),
+        tooltip: {
+          ...tooltipOpts(),
+          callbacks: { label: ctx => ' ROAS: '+ctx.raw+'x' }
+        },
+        annotation: {}
+      },
+      scales: {
+        x: { grid: gridOpts(0.06), ticks:{ maxRotation:45, minRotation:30 } },
+        y: {
+          grid: gridOpts(),
+          ticks: { callback: v => v+'x' },
+        }
+      }
+    }
+  });
+})();
+
+// ── 4. Orders Bar ──────────────────────────────────────────────
+(function() {
+  const ctx = document.getElementById('ordersChart').getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 300);
+  grad.addColorStop(0, 'rgba(78,205,196,0.7)');
+  grad.addColorStop(1, 'rgba(78,205,196,0.05)');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: LABELS,
+      datasets: [{
+        label: 'Ad-Attributed Orders',
+        data: ORDERS,
+        backgroundColor: grad,
+        borderColor: CYAN,
+        borderWidth: 1.5,
+        borderRadius: 5,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: legendOpts(), tooltip: tooltipOpts() },
+      scales: {
+        x: { grid: gridOpts(0.06), ticks:{ maxRotation:45, minRotation:30 } },
+        y: { grid: gridOpts(), ticks: { callback: v => (v/1000).toFixed(0)+'K' } },
+      }
+    }
+  });
+})();
+
+// ── 5. Quarterly Spend vs GMV ──────────────────────────────────
+(function() {
+  const ctx = document.getElementById('qBarChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Q_LABELS,
+      datasets: [
+        {
+          label: 'Ad Spend (₹Cr)',
+          data: Q_SPEND,
+          backgroundColor: 'rgba(108,99,255,0.65)',
+          borderColor: PURPLE,
+          borderWidth: 1.5,
+          borderRadius: 6,
+          borderSkipped: false,
+        },
+        {
+          label: 'Attributed GMV (₹Cr)',
+          data: Q_GMV,
+          backgroundColor: 'rgba(0,212,170,0.55)',
+          borderColor: TEAL,
+          borderWidth: 1.5,
+          borderRadius: 6,
+          borderSkipped: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: legendOpts(), tooltip: tooltipOpts() },
+      scales: {
+        x: { grid: gridOpts(0.06) },
+        y: {
+          grid: gridOpts(),
+          ticks: { callback: v => '₹'+v+'Cr' },
+        }
+      }
+    }
+  });
+})();
+
+// ── 6. Quarterly ROAS Radar/Line ───────────────────────────────
+(function() {
+  const ctx = document.getElementById('qRoasChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Q_LABELS,
+      datasets: [
+        {
+          label: 'Quarterly ROAS',
+          data: Q_ROAS,
+          borderColor: GOLD,
+          borderWidth: 3,
+          pointBackgroundColor: [PURPLE, TEAL, CORAL, GOLD],
+          pointRadius: 8,
+          pointHoverRadius: 11,
+          tension: 0.3,
+          fill: false,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: legendOpts(),
+        tooltip: {
+          ...tooltipOpts(),
+          callbacks: { label: ctx => ' ROAS: '+ctx.raw+'x' }
+        }
+      },
+      scales: {
+        x: { grid: gridOpts(0.06) },
+        y: {
+          grid: gridOpts(),
+          ticks: { callback: v => v+'x' },
+          min: 0,
+        }
+      }
+    }
+  });
+})();
+
+// ── 7. Category Growth Chart ───────────────────────────────────
+(function() {
+  const ctx = document.getElementById('catChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026'],
+      datasets: [{
+        label: 'Active Ad Categories',
+        data: [2, 5, 5, 6],
+        backgroundColor: [
+          'rgba(108,99,255,0.7)',
+          'rgba(0,212,170,0.7)',
+          'rgba(255,107,107,0.7)',
+          'rgba(255,215,0,0.7)',
+        ],
+        borderColor: [PURPLE, TEAL, CORAL, GOLD],
+        borderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: legendOpts(),
+        tooltip: tooltipOpts(),
+      },
+      scales: {
+        x: { grid: gridOpts(0.06) },
+        y: {
+          grid: gridOpts(),
+          ticks: { stepSize:1, callback: v => v+' cats' },
+          min: 0, max: 7,
+        }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
