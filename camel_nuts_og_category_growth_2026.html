@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Camel Nuts · Category Growth · OG Singapore · 2025–26</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#07060a;
+  --card:#120f1a;
+  --acc:#f59e0b;
+  --acc-dim:rgba(245,158,11,.18);
+  --acc-b:rgba(245,158,11,.5);
+  --txt:#ede9f5;
+  --muted:#8a7ea0;
+  --border:rgba(245,158,11,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.55}
+
+/* ── COVER ── */
+.cover{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:80px 68px;
+  background:radial-gradient(ellipse 75% 55% at 25% 45%,rgba(245,158,11,.13) 0%,transparent 68%);
+  position:relative;overflow:hidden;
+}
+.cover::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(245,158,11,.065) 1px,transparent 1px);
+  background-size:26px 26px;pointer-events:none;
+}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:26px}
+.cover h1{font-size:clamp(30px,4.8vw,54px);font-weight:700;line-height:1.1;max-width:840px;margin-bottom:18px}
+.cover h1 em{color:var(--acc);font-style:normal}
+.cover-sub{font-size:15.5px;color:var(--muted);max-width:580px;margin-bottom:54px;line-height:1.6}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:860px}
+.kpi{background:rgba(245,158,11,.07);border:1px solid var(--border);border-radius:12px;padding:22px 18px}
+.kpi-val{font-size:26px;font-weight:700;color:var(--acc);margin-bottom:5px;letter-spacing:-.01em}
+.kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+
+/* ── SECTIONS ── */
+.section{padding:76px 68px;border-top:1px solid var(--border)}
+.sec-tag{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--acc);margin-bottom:12px}
+.sec-title{font-size:27px;font-weight:700;margin-bottom:9px;line-height:1.2}
+.sec-desc{font-size:14px;color:var(--muted);max-width:650px;margin-bottom:36px;line-height:1.65}
+
+/* ── LAYOUTS ── */
+.two-col{display:grid;grid-template-columns:1fr 330px;gap:30px;align-items:start}
+.sov-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:start}
+
+/* ── CHART CARD ── */
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px}
+.chart-card canvas{max-height:290px}
+.chart-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+
+/* ── INSIGHTS ── */
+.ins-stack{display:flex;flex-direction:column;gap:13px}
+.ins{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 16px}
+.ins-val{font-size:22px;font-weight:700;color:var(--acc);margin-bottom:3px}
+.ins-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px}
+.ins-body{font-size:13px;color:var(--txt);line-height:1.55}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse;margin-top:22px;font-size:12.5px}
+th{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid rgba(245,158,11,.07);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.acc{color:var(--acc);font-weight:600}
+
+/* ── ON/OFF CONTRAST ── */
+.contrast-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.contrast-half{padding:22px 18px;border-radius:10px;text-align:center}
+.on{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3)}
+.off{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}
+.c-val{font-size:42px;font-weight:800;margin-bottom:5px;letter-spacing:-.02em}
+.c-sub{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.c-note{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* ── FOOTER ── */
+.footer{padding:28px 68px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px}
+.footer-brand{font-size:13px;font-weight:600;color:var(--acc)}
+.footer-meta{font-size:11px;color:var(--muted);text-align:right}
+
+@media(max-width:920px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .two-col,.sov-grid{grid-template-columns:1fr}
+  .cover,.section,.footer{padding-left:24px;padding-right:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<div class="cover">
+  <div class="eyebrow">Camel Nuts &nbsp;·&nbsp; OG Singapore &nbsp;·&nbsp; Oct 2025 – Apr 2026</div>
+  <h1>Every Time They Invested,<br>They <em>Owned the Category.</em></h1>
+  <p class="cover-sub">Four advertising phases. Four times Camel Nuts commanded near-100% Share of Voice in Snacks &amp; Confectionery on OG. Three months of going dark confirmed the flip side — without ads, they disappeared entirely.</p>
+  <div class="kpis">
+    <div class="kpi">
+      <div class="kpi-val">SGD 55.9K</div>
+      <div class="kpi-label">Total GMV Driven</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">29.5×</div>
+      <div class="kpi-label">Blended ROAS</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">100%</div>
+      <div class="kpi-label">Peak Category SOV</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">3,809</div>
+      <div class="kpi-label">Total Orders</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SECTION 1: INVESTMENT & GMV ══════════════ -->
+<div class="section">
+  <div class="sec-tag">Phase-by-Phase Performance</div>
+  <div class="sec-title">Each Phase Scaled Investment — GMV Followed.</div>
+  <div class="sec-desc">Camel Nuts ran four distinct campaigns between Oct 2025 and Apr 2026. Every phase deployed more budget than the last — and every one delivered a positive return. Daily GMV grew 3.6× from the first phase to the last.</div>
+  <div class="two-col">
+    <div>
+      <div class="chart-card">
+        <div class="chart-label">Ad Spend (SPA + Display) vs GMV · SGD</div>
+        <canvas id="phaseChart"></canvas>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Active Days</th>
+            <th>Spend (SGD)</th>
+            <th>GMV (SGD)</th>
+            <th>ROAS</th>
+            <th>Avg SOV</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Oct '25 &nbsp;·&nbsp; Market Test</td>
+            <td>8</td>
+            <td>37</td>
+            <td>4,446</td>
+            <td class="acc">119×</td>
+            <td>9%</td>
+          </tr>
+          <tr>
+            <td>Feb '26 &nbsp;·&nbsp; Category Push</td>
+            <td>7</td>
+            <td>209</td>
+            <td>6,939</td>
+            <td class="acc">33×</td>
+            <td>~100%</td>
+          </tr>
+          <tr>
+            <td>Mar '26 &nbsp;·&nbsp; Managed Scale</td>
+            <td>15</td>
+            <td>777</td>
+            <td>24,686</td>
+            <td class="acc">32×</td>
+            <td>95%</td>
+          </tr>
+          <tr>
+            <td>Apr '26 &nbsp;·&nbsp; SPA + Display</td>
+            <td>10</td>
+            <td>869</td>
+            <td>19,827</td>
+            <td class="acc">23×</td>
+            <td>100%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ins-stack">
+      <div class="ins">
+        <div class="ins-label">Daily GMV Growth</div>
+        <div class="ins-val">3.6×</div>
+        <div class="ins-body">Average daily GMV rose from SGD 556/day in Oct to SGD 1,983/day in Apr — as investment matured, each dollar worked harder and drove larger baskets.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-label">SGD 1,892 → SGD 55.9K</div>
+        <div class="ins-val">29.5× Return</div>
+        <div class="ins-body">Across all four phases, every SGD spent returned SGD 29.5 in GMV. Even at the highest spend point (Apr, SGD 869), ROAS held above 23× — well clear of diminishing returns.</div>
+      </div>
+      <div class="ins">
+        <div class="ins-label">Display Incremental GMV</div>
+        <div class="ins-val">+SGD 2,931</div>
+        <div class="ins-body">Display campaigns in Mar and Apr added SGD 2,931 in GMV at a 32× display ROAS — proving display amplifies SPA without overlap, not replacing it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SECTION 2: CATEGORY SHARE (SOV) ══════════════ -->
+<div class="section">
+  <div class="sec-tag">Category Share · Snacks &amp; Confectionery</div>
+  <div class="sec-title">On = Dominant.&nbsp; Off = Invisible.</div>
+  <div class="sec-desc">Share of Voice tracks Camel Nuts' share of all sponsored impressions in the Snacks category on OG. The pattern is stark: whenever the brand invested, it owned the shelf. Whenever it went dark, its SOV dropped to zero — handing the category to competitors.</div>
+  <div class="sov-grid">
+    <div>
+      <div class="chart-card">
+        <div class="chart-label">Monthly Share of Voice — Snacks &amp; Confectionery</div>
+        <canvas id="sovChart"></canvas>
+      </div>
+    </div>
+    <div>
+      <div class="contrast-box">
+        <div class="contrast-half on">
+          <div class="c-val" style="color:var(--acc)">~100%</div>
+          <div class="c-sub">SOV when advertising</div>
+          <div class="c-note">Feb, Mar &amp; Apr — Camel Nuts was the only<br>visible snack brand on OG's sponsored shelf</div>
+        </div>
+        <div class="contrast-half off" style="margin-top:0">
+          <div class="c-val" style="color:var(--muted)">0%</div>
+          <div class="c-sub">SOV when dark</div>
+          <div class="c-note">Nov, Dec &amp; Jan — 3 full months of<br>zero visibility. Competitors owned the shelf.</div>
+        </div>
+      </div>
+      <div class="ins-stack" style="margin-top:14px">
+        <div class="ins">
+          <div class="ins-label">SOV Lift on Day 1</div>
+          <div class="ins-val">0% → 100%</div>
+          <div class="ins-body">The moment Camel Nuts resumed advertising in Feb after 3 dark months, SOV recovered to near 100% instantly. Category ownership is not organic — it is bought and maintained.</div>
+        </div>
+        <div class="ins">
+          <div class="ins-label">Oct vs Feb SOV Gap</div>
+          <div class="ins-val">9% → 100%</div>
+          <div class="ins-body">A 6× budget increase from Oct (SGD 37) to Feb (SGD 209) translated into a 10× SOV jump — from a 9% fringe presence to complete category dominance.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<div class="footer">
+  <div class="footer-brand">Camel Nuts &nbsp;·&nbsp; OG Singapore</div>
+  <div class="footer-meta">Entity 10098907 &nbsp;·&nbsp; Agency 454 &nbsp;·&nbsp; Oct 2025 – May 2026 &nbsp;·&nbsp; Currency: SGD &nbsp;·&nbsp; Prepared by Osmos</div>
+</div>
+
+<script>
+Chart.defaults.color = '#8a7ea0';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+const ACC     = '#f59e0b';
+const ACC_DIM = 'rgba(245,158,11,0.28)';
+const WHITE   = 'rgba(255,255,255,0.92)';
+const MUTED   = '#8a7ea0';
+const GRID    = 'rgba(245,158,11,0.07)';
+
+// ── Phase Chart: stacked bar (SPA+Display) + GMV line ──
+new Chart(document.getElementById('phaseChart').getContext('2d'), {
+  data: {
+    labels: [
+      ["Oct '25", "(8 days)"],
+      ["Feb '26", "(7 days)"],
+      ["Mar '26", "(15 days)"],
+      ["Apr '26", "(10 days)"]
+    ],
+    datasets: [
+      {
+        type: 'bar',
+        label: 'SPA Spend (SGD)',
+        data: [37.21, 209.05, 742.56, 811.04],
+        backgroundColor: ACC,
+        stack: 'spend',
+        yAxisID: 'y',
+        borderRadius: 5,
+        order: 2,
+      },
+      {
+        type: 'bar',
+        label: 'Display Spend (SGD)',
+        data: [0, 0, 34.28, 58.35],
+        backgroundColor: ACC_DIM,
+        stack: 'spend',
+        yAxisID: 'y',
+        borderRadius: 5,
+        order: 2,
+      },
+      {
+        type: 'line',
+        label: 'GMV (SGD)',
+        data: [4446, 6939, 24686, 19827],
+        borderColor: WHITE,
+        backgroundColor: 'rgba(255,255,255,0.04)',
+        fill: false,
+        yAxisID: 'y2',
+        tension: 0.3,
+        pointRadius: 6,
+        pointBackgroundColor: WHITE,
+        pointBorderColor: '#07060a',
+        pointBorderWidth: 2,
+        borderWidth: 2.5,
+        order: 1,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { boxWidth: 10, padding: 16, color: MUTED, font: { size: 11 } }
+      },
+      tooltip: {
+        backgroundColor: '#1a1528',
+        borderColor: 'rgba(245,158,11,0.28)',
+        borderWidth: 1,
+        titleColor: '#fff',
+        bodyColor: MUTED,
+        padding: 12,
+        callbacks: {
+          label: ctx => {
+            const v = ctx.parsed.y;
+            return ` ${ctx.dataset.label}: SGD ${v.toLocaleString(undefined, {maximumFractionDigits:0})}`;
+          }
+        }
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: { color: GRID },
+        ticks: { color: MUTED, font: { size: 11 } }
+      },
+      y: {
+        stacked: true,
+        grid: { color: GRID },
+        ticks: { color: MUTED, font: { size: 11 }, callback: v => 'SGD ' + v },
+        title: { display: true, text: 'Spend (SGD)', color: MUTED, font: { size: 10 } },
+      },
+      y2: {
+        position: 'right',
+        grid: { drawOnChartArea: false },
+        ticks: {
+          color: MUTED, font: { size: 11 },
+          callback: v => v >= 1000 ? 'SGD ' + (v/1000).toFixed(0) + 'K' : 'SGD ' + v
+        },
+        title: { display: true, text: 'GMV (SGD)', color: MUTED, font: { size: 10 } },
+      },
+    },
+  },
+});
+
+// ── SOV Chart: monthly Share of Voice ──
+const sovMonths = ["Oct '25", "Nov '25", "Dec '25", "Jan '26", "Feb '26", "Mar '26", "Apr '26"];
+const sovVals   = [9.2, 0, 0, 0, 100, 94.9, 100];
+const sovColors = sovVals.map(v => v > 0 ? ACC : 'rgba(138,126,160,0.18)');
+
+new Chart(document.getElementById('sovChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: sovMonths,
+    datasets: [{
+      label: 'Share of Voice (%)',
+      data: sovVals,
+      backgroundColor: sovColors,
+      borderRadius: 6,
+      borderSkipped: false,
+    }],
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a1528',
+        borderColor: 'rgba(245,158,11,0.28)',
+        borderWidth: 1,
+        titleColor: '#fff',
+        bodyColor: MUTED,
+        padding: 12,
+        callbacks: {
+          label: ctx => {
+            const v = ctx.parsed.y;
+            return v === 0 ? ' SOV: 0% — no active campaigns' : ` SOV: ${v.toFixed(1)}%`;
+          }
+        }
+      },
+    },
+    scales: {
+      x: { grid: { color: GRID }, ticks: { color: MUTED, font: { size: 11 } } },
+      y: {
+        min: 0,
+        max: 115,
+        grid: { color: GRID },
+        ticks: {
+          color: MUTED, font: { size: 11 },
+          stepSize: 25,
+          callback: v => v + '%'
+        },
+        title: { display: true, text: 'Share of Voice', color: MUTED, font: { size: 10 } },
+      },
+    },
+  },
+});
+</script>
+</body>
+</html>
